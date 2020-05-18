@@ -9,6 +9,8 @@ public class MainViewStage {
 	// component/node variables
 	private Stage stage;
 	private Scene scene;
+	
+	private String title = "MRI Scanning Business";
 
 	public MainViewStage(double sizeX, double sizeY, double positionX, double positionY) {
 
@@ -19,6 +21,7 @@ public class MainViewStage {
 		stage.setY(positionY);
 		// set icon
 		stage.getIcons().add(new Image("images/image.png"));
+		stage.setTitle(title);
 
 		// SCENE
 		scene = new MainViewScene(stage, sizeX, sizeY).getScene();
