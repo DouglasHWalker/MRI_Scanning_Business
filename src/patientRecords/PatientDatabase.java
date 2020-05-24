@@ -1,17 +1,34 @@
 package patientRecords;
 
-import java.util.Date;
+import java.util.LinkedList;
 
 import javafx.scene.control.Label;
 
 public class PatientDatabase {
 	
-	Label patient1FN = new Label ("Blair, Amelia");
-	//Date patient1LV = new Date(13/6/2005);
-	Label patient1LV = new Label ("13/6/2005");
-	Label patient1NV = new Label ("N/A");
-	Label patient1PN = new Label ("0400 000 000");
-	Label patient1A = new Label ("128 Bundaberg Road, Semaphore");
+	public class Patient {
+		public String name, dob, dod, phone, address;
+
+		public Patient(String name, String dob, String dod, String phone, String address) {
+			this.name = name;
+			this.dob = dob;
+			this.dod = dod;
+			this.phone = phone;
+			this.address = address;
+		}
+		
+		
+	}
+	
+	public LinkedList<Patient> getPatients(){
+		// Create linked list
+		LinkedList<Patient> patients = new LinkedList();
+		// add patients
+		patients.add(new Patient("Blair, Amelia", "13/6/2005", "N/A", "0400 000 000", "128 Bundaberg Road, Semaphore"));
+		patients.add(new Patient("James, Doe", "13/6/1967", "N/A", "0445 050 555", "129 Sundenberg Drive, Hemisphere"));
+		// return
+		return patients;
+	}
 	
 	Label patient2FN = new Label ("Cage, David");
 	//Date patient2LV = new Date(25/3/2016);
