@@ -1,5 +1,7 @@
 package bookingSystem;
 
+import java.util.Calendar;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -14,6 +16,7 @@ public class BookingSystemScene {
 	// component/node variables
 	private Stage stage;
 	private Scene scene;
+	private MonthView monthView = new MonthView(Calendar.getInstance());
 
 	public BookingSystemScene(Stage stage, double sizeX, double sizeY) {
 		Label sceneTitle = new Label("Booking System");
@@ -36,9 +39,9 @@ public class BookingSystemScene {
 		backBtn.setOnAction(backBtnClick);
 
 		// content layout and styles
-		content.setStyle("-fx-background-color: rgb(102,179,233)");
-		content.setCenter(sceneTitle);
-		content.setLeft(backBtn);
+		content.setStyle("-fx-background-color: rgb(255,0,0)");
+		content.setCenter(monthView);
+		content.setBottom(backBtn);
 
 		// SCENE
 		scene = new Scene(content, sizeX, sizeY);
