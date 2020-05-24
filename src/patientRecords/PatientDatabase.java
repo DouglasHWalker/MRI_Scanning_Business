@@ -22,7 +22,7 @@ public class PatientDatabase {
 	public LinkedList<Patient> getPatients() {
 		//Create new LinkedList
 		LinkedList<Patient> patients = new LinkedList();
-		//Add all za patinets
+		//Add all ze patients
 		patients.add(new Patient("Blair, Amelia", "13/6/2005", "N/A", "0400 000 000", "128 Bundaberg Road, Semaphore"));
 		patients.add(new Patient("Cage, David", "25/3/2016", "N/A", "0422 000 000", "5 Second Street, Morgan"));
 		patients.add(new Patient("Doe, James", "13/6/1967", "N/A", "0445 050 555", "129 Sundenberg Drive, Hemisphere"));
