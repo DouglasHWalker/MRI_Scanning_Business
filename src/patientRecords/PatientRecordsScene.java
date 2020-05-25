@@ -70,24 +70,6 @@ public class PatientRecordsScene {
 		Label numberLabel = new Label();
 		Label addressLabel = new Label();
 		
-		//Iterate through and yeet all patients into dB
-		//Creates a Children: duplicate children added: parent = Grid hgap=0.0, vgap=0.0, alignment=TOP_LEFT error. Being investigated.
-		for (int i = 0; i < patients.size(); ++i) {
-			Patient p = patients.get(i - 1);
-			//Modify labels based on patient content
-			nameLabel = new Label(p.name);
-			doLVLabel = new Label(p.doLV);
-			doNVLabel = new Label(p.doNV);
-			numberLabel = new Label(p.phone);
-			addressLabel = new Label(p.address);
-			//add to gridPane
-			gridPane.add(nameLabel, 1, i);
-			gridPane.add(doLVLabel, 2, i);
-			gridPane.add(doNVLabel, 3, i);
-			gridPane.add(nameLabel, 4, i);
-			gridPane.add(addressLabel, 5, i);
-		}
-		
 		//gridPane formatting
 		gridPane.setGridLinesVisible(true);
 		
