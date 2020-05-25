@@ -71,6 +71,7 @@ public class PatientRecordsScene {
 		Label addressLabel = new Label();
 		
 		//Iterate through and yeet all patients into dB
+		//Creates a Children: duplicate children added: parent = Grid hgap=0.0, vgap=0.0, alignment=TOP_LEFT error. Being investigated.
 		for (int i = 0; i < patients.size(); ++i) {
 			Patient p = patients.get(i - 1);
 			//Modify labels based on patient content
