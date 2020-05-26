@@ -8,8 +8,9 @@ import javafx.stage.Stage;
 public class MainView extends Application {
 
 	private MainViewStage mainWindow;
-	private int initialHeight = 360;
-	private int initialWidth = 364;
+	Rectangle2D setBounds = Screen.getPrimary().getVisualBounds();
+	private double initialHeight = setBounds.getHeight();
+	private double initialWidth = setBounds.getWidth();
 
 	public MainView() {
 		Rectangle2D screen = Screen.getPrimary().getBounds();
