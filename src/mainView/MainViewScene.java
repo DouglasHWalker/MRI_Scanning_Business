@@ -32,13 +32,12 @@ public class MainViewScene {
 	RowConstraints row0 = new RowConstraints();
 	RowConstraints row1 = new RowConstraints();
 	private final int BTN_MIN_WIDTH = 300, BTN_MIN_HEIGHT = 60, BTN_MAX_WIDTH = 1000, BTN_MAX_HEIGHT = 1000,
-			BTN_PREF_WIDTH = 600, BTN_PREF_HEIGHT = 600;
+			BTN_PREF_WIDTH = 600, BTN_PREF_HEIGHT = 360;
 
 	// components
 	private Label welcomeLbl;
 	private Button bookingBtn;
-	private Button recordsBtn;
-	private Button appointmentsBtn;
+	private Button patientsBtn;
 	private Button logOutBtn;
 	private Button scanBtn;
 	private Button cancelBtn;
@@ -95,20 +94,13 @@ public class MainViewScene {
 		bookingBtn.setPrefHeight(BTN_PREF_HEIGHT);
 		bookingBtn.setMaxWidth(BTN_MAX_WIDTH);
 		bookingBtn.setMaxHeight(BTN_MAX_HEIGHT);
-		recordsBtn = new Button("Patient Records");
-		recordsBtn.setMinWidth(BTN_MIN_WIDTH);
-		recordsBtn.setMinHeight(BTN_MIN_HEIGHT);
-		recordsBtn.setPrefWidth(BTN_PREF_WIDTH);
-		recordsBtn.setPrefHeight(BTN_PREF_HEIGHT);
-		recordsBtn.setMaxWidth(BTN_MAX_WIDTH);
-		recordsBtn.setMaxHeight(BTN_MAX_HEIGHT);
-		appointmentsBtn = new Button("View Appointments");
-		appointmentsBtn.setMinWidth(BTN_MIN_WIDTH);
-		appointmentsBtn.setMinHeight(BTN_MIN_HEIGHT);
-		appointmentsBtn.setPrefWidth(BTN_PREF_WIDTH);
-		appointmentsBtn.setPrefHeight(BTN_PREF_HEIGHT);
-		appointmentsBtn.setMaxWidth(BTN_MAX_WIDTH);
-		appointmentsBtn.setMaxHeight(BTN_MAX_HEIGHT);
+		patientsBtn = new Button("View Patient Information");
+		patientsBtn.setMinWidth(BTN_MIN_WIDTH);
+		patientsBtn.setMinHeight(BTN_MIN_HEIGHT);
+		patientsBtn.setPrefWidth(BTN_PREF_WIDTH);
+		patientsBtn.setPrefHeight(BTN_PREF_HEIGHT);
+		patientsBtn.setMaxWidth(BTN_MAX_WIDTH);
+		patientsBtn.setMaxHeight(BTN_MAX_HEIGHT);
 		logOutBtn = new Button("Log Out");
 		logOutBtn.setMinWidth(BTN_MIN_WIDTH);
 		logOutBtn.setMinHeight(BTN_MIN_HEIGHT);
@@ -146,11 +138,12 @@ public class MainViewScene {
 		emergencyBtn.setMaxWidth(BTN_MAX_WIDTH);
 		
 		// add components to content
-		gridPane.getChildren().addAll(welcomeLbl, recordsBtn, bookingBtn, scanBtn, appointmentsBtn);
-		GridPane.setConstraints(recordsBtn, 0, 0);
+		gridPane.getChildren().addAll(welcomeLbl, bookingBtn, scanBtn, patientsBtn, logOutBtn);
+		content.setTop(welcomeLbl);
+		GridPane.setConstraints(scanBtn, 0, 0);
 		GridPane.setConstraints(bookingBtn, 1, 0);
 		GridPane.setConstraints(logOutBtn, 0, 1);
-		GridPane.setConstraints(appointmentsBtn, 1, 1);
+		GridPane.setConstraints(patientsBtn, 1, 1);
 		content.setCenter(gridPane);
 
 		// set up all the event handlers for components
@@ -166,13 +159,9 @@ public class MainViewScene {
 		bookingBtn.setFont(MAIN_FONT);
 		bookingBtn.setTextFill(btnForeground);
 		
-		recordsBtn.setStyle(btnBackground);
-		recordsBtn.setFont(MAIN_FONT);
-		recordsBtn.setTextFill(btnForeground);
-		
-		appointmentsBtn.setStyle(btnBackground);
-		appointmentsBtn.setFont(MAIN_FONT);
-		appointmentsBtn.setTextFill(btnForeground);
+		patientsBtn.setStyle(btnBackground);
+		patientsBtn.setFont(MAIN_FONT);
+		patientsBtn.setTextFill(btnForeground);
 		
 		scanBtn.setStyle(btnBackground);
 		scanBtn.setFont(MAIN_FONT);
@@ -208,17 +197,6 @@ public class MainViewScene {
 		bookingBtn.setOnAction(bookingBtnClick);
 
 		// Add button click handler
-		EventHandler<ActionEvent> appointmentsBtnClick = new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				scene = new MedicalAccessScene(stage, scene.getWidth(), scene.getHeight()).getScene();
-				stage.setScene(scene);
-			}
-		};
-		// add handler to button
-		appointmentsBtn.setOnAction(appointmentsBtnClick);
-
-		// Add button click handler
 		EventHandler<ActionEvent> logOutBtnClick = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
@@ -230,7 +208,7 @@ public class MainViewScene {
 		logOutBtn.setOnAction(logOutBtnClick);
 
 		// Add button click handler
-		EventHandler<ActionEvent> scanBtnBtnClick = new EventHandler<ActionEvent>() {
+		EventHandler<ActionEvent> scanBtnClick = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				scene = new MachineOperationScene(stage, scene.getWidth(), scene.getHeight()).getScene();
@@ -238,10 +216,10 @@ public class MainViewScene {
 			}
 		};
 		// add handler to button
-		scanBtn.setOnAction(scanBtnBtnClick);
+		scanBtn.setOnAction(scanBtnClick);
 
 		// Add button click handler
-		EventHandler<ActionEvent> recordsBtnClick = new EventHandler<ActionEvent>() {
+		EventHandler<ActionEvent> patientsBtnClick = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				scene = new PatientRecordsScene(stage, scene.getWidth(), scene.getHeight()).getScene();
@@ -249,7 +227,7 @@ public class MainViewScene {
 			}
 		};
 		// add handler to button
-		recordsBtn.setOnAction(recordsBtnClick);
+		patientsBtn.setOnAction(patientsBtnClick);
 	}
 
 	public Scene getScene() {
