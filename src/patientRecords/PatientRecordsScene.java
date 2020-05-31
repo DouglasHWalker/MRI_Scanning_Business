@@ -83,7 +83,7 @@ public class PatientRecordsScene {
 			gridPane.add(nameLabel, 1, i);
 			gridPane.add(doLVLabel, 2, i);
 			gridPane.add(doNVLabel, 3, i);
-			gridPane.add(nameLabel, 4, i);
+			gridPane.add(numberLabel, 4, i);
 			gridPane.add(addressLabel, 5, i);
 		}
 		
