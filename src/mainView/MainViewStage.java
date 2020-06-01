@@ -26,7 +26,6 @@ public class MainViewStage {
 		
 		// SCENE
 		scene = new MainViewScene(stage, sizeX, sizeY).getScene();
-		
 		// add to stage
 		stage.setScene(scene);
 		// display

@@ -3,6 +3,7 @@ package mainView;
 import bookingSystem.BookingSystemScene;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,12 +12,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import machineOperation.MachineOperationScene;
-import medicalAccess.MedicalAccessScene;
 import patientRecords.PatientRecordsScene;
 import scanDataManagement.ScanDataScene;
 
@@ -55,7 +54,7 @@ public class MainViewScene {
 	
 	// Colors and Styling CONSTANTS
 	private static final Font MAIN_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 18);
-	private static final String CLINIC_WHITE = "-fx-background-color: rgb(249,246,246)";
+	private static final String CLINIC_WHITE = "-fx-background-color: rgb(255,250,250)";
 	private static final String BLACK_BLIGHT = "-fx-background-color: rgb(11,10,9)";
 	private static final String MANSFIELD_GREY = "-fx-background-color: rgb(211,211,211)";
 	private static final String CLASSIC_SCRUB_BLUE = "-fx-background-color: rgb(35,91,170)";
@@ -80,6 +79,7 @@ public class MainViewScene {
 		gridPane = new GridPane();
 		gridPane.setHgap(10);
 		gridPane.setVgap(10);
+		gridPane.setPadding(new Insets(10));
 		gridPane.setAlignment(Pos.CENTER);
 
 		
