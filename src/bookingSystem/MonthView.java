@@ -111,33 +111,39 @@ public class MonthView extends GridPane {
 		this.add(dayLbl, 6, 1);
 
 		// add dates in month
-		Calendar tempCal = activeMonth;
-		tempCal.set(Calendar.DATE, tempCal.getActualMinimum(Calendar.DATE));
-		int startDay = tempCal.get(Calendar.DAY_OF_WEEK) - 2;
-		int currentDatePos = activeMonth.get(Calendar.DATE) + startDay;
+		Calendar tempCal = (Calendar) activeMonth.clone();
+		tempCal.set(Calendar.DAY_OF_MONTH, tempCal.getActualMinimum(Calendar.DAY_OF_MONTH));
+		
+		int colIndex = tempCal.get(Calendar.DAY_OF_WEEK) - 1;
+		int rowIndex = 2;
 		for (int i = 1; i <= activeMonth.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
-			int colIndex = (i + startDay) % 7;
-			int rowIndex = (i + startDay) / 7 + 2;
-
+			// find colIndex
+			colIndex = colIndex % 7;
+			// update and add label
 			updateDayLbl(i + "");
-			// if current day
-			if (i == currentDatePos && isCurrentMonth()) {
+			// add indicator
+			if (isCurrentDate(tempCal)) {
 				dayLbl.setTextFill(ALT_TEXT_CLR);
 				this.add(dayIndicator, colIndex, rowIndex);
 			}
-
 			this.add(dayLbl, colIndex, rowIndex);
+			// increment row and column index
+			if((colIndex + 1) % 7 == 0){
+				rowIndex++;
+			}
+			colIndex++;
+			// increment tempCal
+			tempCal.add(Calendar.DAY_OF_YEAR, 1);
 		}
 	}
 
-	private boolean isCurrentMonth() {
+	private boolean isCurrentDate(Calendar cal) {
 		boolean result = false;
-		Calendar currentDate = Calendar.getInstance();
-		if (activeMonth.get(Calendar.MONTH) == currentDate.get(Calendar.MONTH)
-				&& activeMonth.get(Calendar.YEAR) == currentDate.get(Calendar.YEAR)) {
+		Calendar curDate = Calendar.getInstance();
+		if (cal.get(Calendar.DAY_OF_YEAR) == curDate.get(Calendar.DAY_OF_YEAR)
+				&& cal.get(Calendar.YEAR) == curDate.get(Calendar.YEAR)) {
 			result = true;
 		}
-
 		return result;
 	}
 

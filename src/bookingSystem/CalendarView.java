@@ -7,20 +7,25 @@ import java.util.Locale;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -30,7 +35,7 @@ public class CalendarView extends BorderPane {
 
 	// Styling constants
 	private static final Insets PADDING = new Insets(12, 8, 12, 8);
-	private static final Insets HEADER_PADDING = new Insets(16);
+	private static final Insets HEADER_PADDING = new Insets(16,16,0,16);
 
 	private static final Font MAIN_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 16);
 	private static final Font MEDIUM_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 18);
@@ -39,6 +44,7 @@ public class CalendarView extends BorderPane {
 	private static final Color TEXT_CLR = Color.rgb(11, 10, 9);
 	private static final Color INDICATOR_CLR = Color.rgb(35, 91, 170);
 	private static final Color ALT_TEXT_CLR = Color.rgb(249, 246, 246);
+	private static final Color TIME_TEXT_CLR = Color.rgb(160, 160, 160);
 
 	private static final String CLINIC_WHITE = "-fx-background-color: rgb(255,255,255)";
 	private static final String BLACK_BLIGHT = "-fx-background-color: rgb(11,10,9)";
@@ -50,6 +56,9 @@ public class CalendarView extends BorderPane {
 	// instance variables
 	private Calendar activeDate;
 	private Date date = new Date();
+	private static final String[] TIMES = new String[] { "Midnight", "1am", "2am", "3am", "4am", "5am", "6am", "7am", "8am",
+			"9am", "10am", "11am", "Noon", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm",
+			"11pm" };
 
 	// components
 	private BorderPane header;
@@ -70,11 +79,13 @@ public class CalendarView extends BorderPane {
 
 	private GridPane dateRow;
 	private Label dayLbl;
-	private Label dateLbl;
+	private Label dateLbl; // TODO: transfer the days to a different label
 	private Circle dayIndicator;
 
-	private ScrollPane timeNavigator;
-	private GridPane eventSpace;
+	private ScrollPane eventSpace;
+	private HBox eventGroup;
+	private GridPane eventGrid;
+	private VBox timeSpace;
 	private Label timeLbl;
 
 	public CalendarView(Calendar date) {
@@ -97,6 +108,7 @@ public class CalendarView extends BorderPane {
 		initEventSpace();
 
 		this.setTop(header);
+		this.setCenter(eventSpace);
 	}
 
 	private void initHeader() {
@@ -152,7 +164,7 @@ public class CalendarView extends BorderPane {
 
 		// DATE ROW
 		dateRow = new GridPane();
-		dateRow.setPadding(PADDING);
+		dateRow.setPadding(new Insets(12, 8, 0, 8));
 		dateRow.setMaxWidth(Double.MAX_VALUE);
 		// add day row
 		addDayRow();
@@ -231,12 +243,10 @@ public class CalendarView extends BorderPane {
 		GridPane.setFillWidth(dayIndicator, true);
 		GridPane.setHalignment(dayIndicator, HPos.CENTER);
 
-		Calendar tempCal = Calendar.getInstance();
-		tempCal.set(Calendar.DATE, activeDate.get(Calendar.DATE));
-		// get start date for sunday
+		Calendar tempCal = (Calendar) activeDate.clone();
+		// get start date for Sunday
 		int currentDatePos = activeDate.get(Calendar.DAY_OF_WEEK);
 		tempCal.set(Calendar.DATE, activeDate.get(Calendar.DATE) - (currentDatePos - 1));
-		int date = tempCal.get(Calendar.DATE);
 		// for every day in the week
 		for (int i = 0; i < 7; i++) {
 			updateDateLbl(tempCal.get(Calendar.DATE) + "");
@@ -249,7 +259,7 @@ public class CalendarView extends BorderPane {
 			// add label to date row
 			dateRow.add(dayLbl, i + 1, 1);
 			// increment date
-			tempCal.set(Calendar.DATE, tempCal.get(Calendar.DATE) + 1);
+			tempCal.add(Calendar.DAY_OF_YEAR, 1);
 		}
 	}
 
@@ -260,7 +270,6 @@ public class CalendarView extends BorderPane {
 				&& cal.get(Calendar.YEAR) == curDate.get(Calendar.YEAR)) {
 			result = true;
 		}
-
 		return result;
 	}
 
@@ -275,8 +284,56 @@ public class CalendarView extends BorderPane {
 	}
 
 	private void initEventSpace() {
-		// TODO Auto-generated method stub
+		eventSpace = new ScrollPane();
+		eventSpace.getStyleClass().add("edge-to-edge");
+		eventSpace.setFitToWidth(true);
+		eventSpace.setVbarPolicy(ScrollBarPolicy.NEVER);
+		
+		eventGroup = new HBox();
+		eventGroup.setMaxWidth(Double.MAX_VALUE);
+		eventGroup.setStyle(CLINIC_WHITE);
+		// event grid
+		eventGrid = new GridPane();
+		eventGrid.setGridLinesVisible(true);
+		eventGrid.setStyle(CLINIC_WHITE);
+		eventGrid.setPadding(new Insets(10,0,0,5));
+	
+		// time space
+		timeSpace = new VBox();
+		timeSpace.setAlignment(Pos.CENTER_RIGHT);
+		addTimeLabels();
+			// add rows
+		for(int i = 0; i < 23; i++) {
+			eventGrid.add(new Label(i + ""), 0, i);
+		}
+		// add columns
+		for(int i = 0; i < 7; i++) {
+			Label lbl = new Label(i + "");
+			eventGrid.add(lbl, i, 0);
+			ColumnConstraints col = new ColumnConstraints();
+			col.setHgrow(Priority.NEVER);
+			col.setPercentWidth(100.00);
+			eventGrid.getColumnConstraints().add(col);
+		}
+		eventGroup.getChildren().addAll(timeSpace, eventGrid);
+	    HBox.setHgrow(eventGrid, Priority.ALWAYS);
+		eventSpace.setContent(eventGroup);
+	}
 
+	private void addTimeLabels() {
+		for (int i = 0; i < TIMES.length; i++) {
+			timeLbl = new Label(TIMES[i]);
+			timeLbl.setTextFill(TIME_TEXT_CLR);
+			timeSpace.getChildren().add(timeLbl);
+			timeSpace.getChildren().add(createSpacer());
+			eventGrid.getRowConstraints().add(new RowConstraints(100));
+		}
+	}
+
+	private Node createSpacer() {
+		final Region spacer = new Region();
+		VBox.setVgrow(spacer, Priority.ALWAYS);
+		return spacer;
 	}
 
 	private void setComponentStyles() {
