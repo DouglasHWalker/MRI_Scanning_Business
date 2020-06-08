@@ -1,13 +1,14 @@
 package bookingSystem;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,8 +19,13 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -35,7 +41,7 @@ public class CalendarView extends BorderPane {
 
 	// Styling constants
 	private static final Insets PADDING = new Insets(12, 8, 12, 8);
-	private static final Insets HEADER_PADDING = new Insets(16,16,0,16);
+	private static final Insets HEADER_PADDING = new Insets(16, 16, 0, 16);
 
 	private static final Font MAIN_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 16);
 	private static final Font MEDIUM_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 18);
@@ -45,6 +51,7 @@ public class CalendarView extends BorderPane {
 	private static final Color INDICATOR_CLR = Color.rgb(35, 91, 170);
 	private static final Color ALT_TEXT_CLR = Color.rgb(249, 246, 246);
 	private static final Color TIME_TEXT_CLR = Color.rgb(160, 160, 160);
+	private static final Color BORDER_CLR = Color.rgb(211, 211, 211);
 
 	private static final String CLINIC_WHITE = "-fx-background-color: rgb(255,255,255)";
 	private static final String BLACK_BLIGHT = "-fx-background-color: rgb(11,10,9)";
@@ -52,12 +59,14 @@ public class CalendarView extends BorderPane {
 
 	private static final String BTN_BORDER = "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
 			+ "-fx-border-radius: 8;" + "-fx-border-color: rgb(211, 211, 211)";
-
+	private static final String EVENT_BORDER = "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
+			+ "-fx-border-color: rgb(211, 211, 211)";
 	// instance variables
 	private Calendar activeDate;
 	private Date date = new Date();
-	private static final String[] TIMES = new String[] { "Midnight", "1am", "2am", "3am", "4am", "5am", "6am", "7am", "8am",
-			"9am", "10am", "11am", "Noon", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm",
+	private ArrayList<Appointment> appointments = new Appointment().getAppointments();
+	private static final String[] TIMES = new String[] { "Midnight", "1am", "2am", "3am", "4am", "5am", "6am", "7am",
+			"8am", "9am", "10am", "11am", "Noon", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm",
 			"11pm" };
 
 	// components
@@ -87,6 +96,9 @@ public class CalendarView extends BorderPane {
 	private GridPane eventGrid;
 	private VBox timeSpace;
 	private Label timeLbl;
+	private BorderPane eventCell;
+	
+	
 
 	public CalendarView(Calendar date) {
 		super();
@@ -101,7 +113,6 @@ public class CalendarView extends BorderPane {
 
 	private void initializeComponents() {
 
-//		this.setPadding(PADDING);
 		this.setStyle(CLINIC_WHITE);
 
 		initHeader();
@@ -111,6 +122,9 @@ public class CalendarView extends BorderPane {
 		this.setCenter(eventSpace);
 	}
 
+	/**
+	 * HEADER
+	 */
 	private void initHeader() {
 		// header
 		header = new BorderPane();
@@ -164,7 +178,9 @@ public class CalendarView extends BorderPane {
 
 		// DATE ROW
 		dateRow = new GridPane();
-		dateRow.setPadding(new Insets(12, 8, 0, 8));
+		dateRow.setPadding(new Insets(12, 8, 0, 38));
+
+//		dateRow.setGridLinesVisible(true);
 		dateRow.setMaxWidth(Double.MAX_VALUE);
 		// add day row
 		addDayRow();
@@ -283,41 +299,70 @@ public class CalendarView extends BorderPane {
 		GridPane.setHalignment(dayLbl, HPos.CENTER);
 	}
 
+	/**
+	 * EVENT SPACE
+	 */
 	private void initEventSpace() {
 		eventSpace = new ScrollPane();
 		eventSpace.getStyleClass().add("edge-to-edge");
 		eventSpace.setFitToWidth(true);
-		eventSpace.setVbarPolicy(ScrollBarPolicy.NEVER);
-		
+		eventSpace.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
+
 		eventGroup = new HBox();
 		eventGroup.setMaxWidth(Double.MAX_VALUE);
 		eventGroup.setStyle(CLINIC_WHITE);
 		// event grid
 		eventGrid = new GridPane();
-		eventGrid.setGridLinesVisible(true);
+//		eventGrid.setGridLinesVisible(true);
 		eventGrid.setStyle(CLINIC_WHITE);
-		eventGrid.setPadding(new Insets(10,0,0,5));
-	
+		eventGrid.setPadding(new Insets(10, 8, 0, 8));
+
 		// time space
 		timeSpace = new VBox();
 		timeSpace.setAlignment(Pos.CENTER_RIGHT);
 		addTimeLabels();
-			// add rows
-		for(int i = 0; i < 23; i++) {
-			eventGrid.add(new Label(i + ""), 0, i);
-		}
-		// add columns
-		for(int i = 0; i < 7; i++) {
-			Label lbl = new Label(i + "");
-			eventGrid.add(lbl, i, 0);
+
+		int appointCount = 0;
+		// events
+		for (int timeRow = 0; timeRow < 7; timeRow++) {
+			// for each time
+			for (int dayCol = 0; dayCol < 24; dayCol++) {
+				// for each day
+				eventCell = appointments.get(appointCount);
+				appointCount++;
+				eventGrid.add(eventCell, timeRow, dayCol);
+				addEventGridBorder(timeRow, dayCol);
+				
+			}
 			ColumnConstraints col = new ColumnConstraints();
 			col.setHgrow(Priority.NEVER);
-			col.setPercentWidth(100.00);
+			col.setPercentWidth(100);
 			eventGrid.getColumnConstraints().add(col);
 		}
+			
+
 		eventGroup.getChildren().addAll(timeSpace, eventGrid);
-	    HBox.setHgrow(eventGrid, Priority.ALWAYS);
+		HBox.setHgrow(eventGrid, Priority.ALWAYS);
 		eventSpace.setContent(eventGroup);
+	}
+
+	private void addEventGridBorder(int i, int d) {
+		// left
+		if (i == 0) {
+			eventCell.setBorder(new Border(new BorderStroke(BORDER_CLR, BORDER_CLR, BORDER_CLR, BORDER_CLR,
+					BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.NONE,
+					CornerRadii.EMPTY, new BorderWidths(1), Insets.EMPTY)));
+
+		}
+		// right
+		else if (i == 6) {
+			eventCell.setBorder(new Border(new BorderStroke(BORDER_CLR, BORDER_CLR, BORDER_CLR, BORDER_CLR,
+					BorderStrokeStyle.SOLID, BorderStrokeStyle.NONE, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID,
+					CornerRadii.EMPTY, new BorderWidths(1), Insets.EMPTY)));
+
+		} else {
+			eventCell.setStyle(EVENT_BORDER);
+		}
 	}
 
 	private void addTimeLabels() {
