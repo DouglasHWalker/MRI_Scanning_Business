@@ -24,6 +24,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import mainView.MainViewScene;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 
 public class PatientRecordsScene {
 	// component/node variables
@@ -175,11 +177,6 @@ public class PatientRecordsScene {
 		addressCol.setMaxWidth(400);
 		addressCol.setCellValueFactory(new PropertyValueFactory("address"));
 
-		/*
-		 * for(int i = 0; i < 13; ++i) { button[i] = new Button();
-		 * button[i].setOnAction(this::handleButtonAction); }
-		 */
-
 		addButton();
 		tableView.setItems(patient);
 		tableView.getColumns().addAll(fullNameCol, ageCol, genderCol, heightCol, weightCol, doLVCol, doNVCol, numberCol,
@@ -192,6 +189,29 @@ public class PatientRecordsScene {
 		headerArea.setCenter(textArea);
 		content.setBottom(btnArea);
 		btnArea.setLeft(backBtn);
+		
+		//Search function
+		FilteredList<Patients> filteredData = new FilteredList<>(patient, p-> true);
+		
+		textArea.textProperty().addListener((observable, oldValue, newValue) -> {
+			filteredData.setPredicate(patients -> {
+				if(newValue == null || newValue.isEmpty()) {
+					return true;
+				}
+				
+				String lowerCaseFilter = newValue.toLowerCase();
+				
+				if(patients.getFullName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+					return true;
+				}
+				
+				return false;
+			});
+		});
+		
+		SortedList<Patients> sortedData = new SortedList<>(filteredData);
+		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
+		tableView.setItems(sortedData);
 
 		// SELECTION MODEL
 		TableViewSelectionModel<Patients> selectionModel = tableView.getSelectionModel();
@@ -259,11 +279,5 @@ public class PatientRecordsScene {
 
 	public void randomMethod() {
 
-	}
-//	selectedItems.addListener(new ListChangeListener<Person>() {
-//		  @Override
-//		  public void onChanged(Change<? extends Person> change) {
-//		    System.out.println("Selection changed: " + change.getList());
-//		  }
-//	
+	}	
 }
