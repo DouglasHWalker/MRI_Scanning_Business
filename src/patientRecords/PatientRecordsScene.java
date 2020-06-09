@@ -2,7 +2,6 @@ package patientRecords;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
@@ -22,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import mainView.MainViewScene;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -33,19 +30,6 @@ public class PatientRecordsScene {
 	private Scene scene;
 	public TableView<Patients> tableView = new TableView();
 	private ObservableList<Patients> selectedPatients;
-	Button button1 = new Button("Info");
-	Button button2 = new Button("Info");
-	Button button3 = new Button("Info");
-	Button button4 = new Button("Info");
-	Button button5 = new Button("Info");
-	Button button6 = new Button("Info");
-	Button button7 = new Button("Info");
-	Button button8 = new Button("Info");
-	Button button9 = new Button("Info");
-	Button button10 = new Button("Info");
-	Button button11 = new Button("Info");
-	Button button12 = new Button("Info");
-	Button button13 = new Button("Info");
 
 	// Colors and styling
 	private String background = CLINIC_WHITE;
@@ -68,6 +52,7 @@ public class PatientRecordsScene {
 	public static final String SICKLY_CYAN = "-fx-background-color: rgb(0,200,215)";
 	public static final String BLUE_CONTENT_CLR = "-fx-background-color: rgb(112,189,243)";
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public PatientRecordsScene(Stage stage, double sizeX, double sizeY) {
 		this.stage = stage;
 
@@ -77,7 +62,6 @@ public class PatientRecordsScene {
 		BorderPane headerArea = new BorderPane();
 		VBox vbox = new VBox();
 		tableView.setEditable(false);
-		TableCell cell = new TableCell();
 		Button backBtn = new Button("Back");
 		Label databaseLabel = new Label("Patient Database");
 		databaseLabel.setFont(MAIN_FONT_HEADING);
@@ -97,7 +81,7 @@ public class PatientRecordsScene {
 		backBtn.setOnAction(backBtnClick);
 
 		// content layout and styles
-		content.setStyle("-fx-background-color: rgb(102,179,233)");
+		content.setStyle("-fx-background-color: rgb(249,246,246)");
 		btnArea.setPadding(new Insets(10, 10, 10, 10));
 		headerArea.setPadding(new Insets(20, 10, 10, 20));
 		tableView.setPadding(new Insets(20, 20, 20, 20));
@@ -177,7 +161,6 @@ public class PatientRecordsScene {
 		addressCol.setMaxWidth(400);
 		addressCol.setCellValueFactory(new PropertyValueFactory("address"));
 
-		addButton();
 		tableView.setItems(patient);
 		tableView.getColumns().addAll(fullNameCol, ageCol, genderCol, heightCol, weightCol, doLVCol, doNVCol, numberCol,
 				addressCol);
@@ -189,26 +172,26 @@ public class PatientRecordsScene {
 		headerArea.setCenter(textArea);
 		content.setBottom(btnArea);
 		btnArea.setLeft(backBtn);
-		
-		//Search function
-		FilteredList<Patients> filteredData = new FilteredList<>(patient, p-> true);
-		
+
+		// Search function
+		FilteredList<Patients> filteredData = new FilteredList<>(patient, p -> true);
+
 		textArea.textProperty().addListener((observable, oldValue, newValue) -> {
 			filteredData.setPredicate(patients -> {
-				if(newValue == null || newValue.isEmpty()) {
+				if (newValue == null || newValue.isEmpty()) {
 					return true;
 				}
-				
+
 				String lowerCaseFilter = newValue.toLowerCase();
-				
-				if(patients.getFullName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+
+				if (patients.getFullName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
 					return true;
 				}
-				
+
 				return false;
 			});
 		});
-		
+
 		SortedList<Patients> sortedData = new SortedList<>(filteredData);
 		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 		tableView.setItems(sortedData);
@@ -221,56 +204,19 @@ public class PatientRecordsScene {
 		selectedPatients.addListener(new ListChangeListener<Patients>() {
 			@Override
 			public void onChanged(Change<? extends Patients> change) {
-				System.out.println("Selection changed: " + change.getList());
+				// System.out.println("Selection changed: " + change.getList());
+				scene = new PatientDetails(stage, scene.getWidth(), scene.getHeight()).getScene();
+				stage.setScene(scene);
 			}
 		});
+		
+		public void colourChanger() {
+			
+		}
 
 		// SCENE!!!
 		scene = new Scene(content, sizeX, sizeY);
 
-	}
-
-	private void handleButtonAction(ActionEvent e) {
-		if (e.getSource() == button13) {
-			scene = new PatientDetails(stage, scene.getWidth(), scene.getHeight()).getScene();
-			stage.setScene(scene);
-		}
-	}
-
-	public void addButton() {
-
-		TableColumn<Patients, String> btnCol = new TableColumn<Patients, String>("Info");
-		btnCol.setMinWidth(50);
-		btnCol.setPrefWidth(70);
-		btnCol.setMaxWidth(100);
-
-		Callback<TableColumn<Patients, String>, TableCell<Patients, String>> cellFactory = new Callback<TableColumn<Patients, String>, TableCell<Patients, String>>() {
-			@Override
-			public TableCell<Patients, String> call(final TableColumn<Patients, String> param) {
-				final TableCell<Patients, String> cell = new TableCell<Patients, String>() {
-
-					private final Button btn = new Button("Info");
-
-					{
-						btn.setOnAction((ActionEvent event) -> {
-							Patients data = getTableView().getItems().get(getIndex());
-						});
-					}
-
-					public void updateItem(String item, boolean empty) {
-						super.updateItem(item, empty);
-						if (empty) {
-							setGraphic(null);
-						} else {
-							setGraphic(btn);
-						}
-					}
-				};
-				return cell;
-			}
-		};
-		tableView.getColumns().add(btnCol);
-		btnCol.setCellFactory(cellFactory);
 	}
 
 	public Scene getScene() {
@@ -279,5 +225,5 @@ public class PatientRecordsScene {
 
 	public void randomMethod() {
 
-	}	
+	}
 }
