@@ -141,6 +141,11 @@ public class PatientRecordsScene {
 		addressCol.setMaxWidth(400);
 		addressCol.setCellValueFactory(new PropertyValueFactory("address"));
 		
+		/*for(int i = 0; i < 13; ++i) {
+			button[i] = new Button();
+			button[i].setOnAction(this::handleButtonAction);
+		}*/
+		
 		addButton();
 		tableView.setItems(patient);
 		tableView.getColumns().addAll(fullNameCol, ageCol, genderCol, heightCol, weightCol, doLVCol, doNVCol, numberCol, addressCol);
@@ -159,45 +164,50 @@ public class PatientRecordsScene {
 	}
 	
 	private void handleButtonAction(ActionEvent e) {
-		if(e.getSource() == button1 || e.getSource() == button2 || e.getSource() == button3 || e.getSource() == button4
-				|| e.getSource() == button5 ||e.getSource() == button6 || e.getSource() == button7
-				|| e.getSource() == button8 || e.getSource() == button9 || e.getSource() == button10
-				|| e.getSource() == button11 || e.getSource() == button12 || e.getSource() == button13) {
+		if(e.getSource() == button13) {
 			scene = new PatientDetails(stage, scene.getWidth(), scene.getHeight()).getScene();
 			stage.setScene(scene);
 		}
 	}
 	
 	public void addButton() {
-		Button[] button = new Button[13];
 		
 		TableColumn<Patients, String> btnCol = new TableColumn<Patients, String>("Info");
     	btnCol.setMinWidth(50);
     	btnCol.setPrefWidth(70);
     	btnCol.setMaxWidth(100);
     	
-    	for(int i = 0; i < button.length; ++i) {
-        	Callback<TableColumn<Patients, String>, TableCell<Patients, String>> cellFactory = new Callback<TableColumn<Patients, String>, TableCell<Patients, String>>() {
-                @Override
-                public TableCell<Patients, String> call(final TableColumn<Patients, String> param) {
-                    final TableCell<Patients, String> cell = new TableCell<Patients, String>() {
+    	Callback<TableColumn<Patients, String>, TableCell<Patients, String>> cellFactory = new Callback<TableColumn<Patients, String>, TableCell<Patients, String>>() {
+            @Override
+            public TableCell<Patients, String> call(final TableColumn<Patients, String> param) {
+                final TableCell<Patients, String> cell = new TableCell<Patients, String>() {
 
-                        public void updateItem(String item, boolean empty) {
-                            super.updateItem(item, empty);
-                            if (empty) {
-                                setGraphic(null);
-                            } else {
-                                setGraphic(button[i]);
+                    private final Button btn = new Button("Info");
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            Patients data = getTableView().getItems().get(getIndex());
+                            if(data.get(getIndex()) == 13) {
+                            	
                             }
+                        });
+                    }
+
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
                         }
-                    };
-                    return cell;
-                }
-            };
-            tableView.getColumns().add(btnCol);
-            btnCol.setCellFactory(cellFactory);
-    	}
-    	}
+                    }
+                };
+                return cell;
+            }
+        };
+        tableView.getColumns().add(btnCol);
+        btnCol.setCellFactory(cellFactory);
+	}
 	public Scene getScene() {
 		return this.scene;
 	}
