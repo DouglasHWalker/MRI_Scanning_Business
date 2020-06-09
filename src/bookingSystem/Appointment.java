@@ -5,10 +5,12 @@ import java.util.Calendar;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Appointment extends BorderPane {
@@ -31,7 +33,10 @@ public class Appointment extends BorderPane {
 		this.description = description;
 		this.participants = participants;
 
-		this.setTop(new Label(title + "\n" + description + "\n" + participants));
+		Label infoLbl = new Label(title + "\n" + description + "\n" + participants);
+		infoLbl.setPadding(new Insets(8));
+		this.setTop(infoLbl);
+		
 	}
 
 	public long getStartTime() {
@@ -86,18 +91,24 @@ public class Appointment extends BorderPane {
 				// for each day
 				appointments.add(new Appointment());
 			}
-		}	
-		
+		}
+
 		// Next month button
 		EventHandler<MouseEvent> eventDetailClick = new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				Stage eventDetailStage = new AppointmentDetailView(getLayoutX(), getLayoutY(), (Appointment)e.getSource());
+				new AppointmentDetailView(e.getScreenX(), e.getScreenY(), (Appointment) e.getSource());
 			};
 		};
+
 		appointments.set(33, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
-				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
+				"Adam Ondra: Checkup",
+				"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
+						+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
+						+ "nisi ut aliquip ex ea commodo consequat. \r\n"
+						+ "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
+						+ "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+				"Adam Ondra"));
 		appointments.get(33).setOnMouseClicked(eventDetailClick);
-		
 
 		appointments.set(34, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
