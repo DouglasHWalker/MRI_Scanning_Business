@@ -3,8 +3,13 @@ package bookingSystem;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class Appointment extends BorderPane {
 
@@ -73,6 +78,7 @@ public class Appointment extends BorderPane {
 		ArrayList<Appointment> appointments = new ArrayList<Appointment>();
 		Calendar startTimeCal = Calendar.getInstance();
 		Calendar endTimeCal = Calendar.getInstance();
+		endTimeCal.add(Calendar.HOUR, 1);
 
 		for (int timeRow = 0; timeRow < 7; timeRow++) {
 			// for each time
@@ -80,9 +86,19 @@ public class Appointment extends BorderPane {
 				// for each day
 				appointments.add(new Appointment());
 			}
-		}
+		}	
+		
+		// Next month button
+		EventHandler<MouseEvent> eventDetailClick = new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				Stage eventDetailStage = new AppointmentDetailView(getLayoutX(), getLayoutY(), (Appointment)e.getSource());
+			};
+		};
 		appointments.set(33, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
+		appointments.get(33).setOnMouseClicked(eventDetailClick);
+		
+
 		appointments.set(34, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.set(36, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
