@@ -154,3 +154,4 @@ public class Patients {
 	public Button getButton() {
 		return button;
 	}
+}
