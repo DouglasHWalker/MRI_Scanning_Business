@@ -20,6 +20,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import mainView.MainViewScene;
@@ -43,6 +45,27 @@ public class PatientRecordsScene {
 	Button button11 = new Button("Info");
 	Button button12 = new Button("Info");
 	Button button13 = new Button("Info");
+	
+	// Colors and styling
+	private String background = CLINIC_WHITE;
+	private String foreground = BLACK_BLIGHT;
+	private String accent = POVIDONE_ORANGE;
+	private String btnBackground = CLASSIC_SCRUB_BLUE;
+	private Color btnForeground = Color.rgb(249, 246, 246); 
+	private Color txtForeground = Color.rgb(11,10,9);
+	
+	// Colors and Styling CONSTANTS
+	public static final Font MAIN_FONT_HEADING = Font.loadFont("file:src/fonts/segoeui.ttf", 20);
+	public static final Font MAIN_FONT_BODY = Font.loadFont("file:src/fonts/segoeui.ttf", 16);
+	public static final Font MAIN_FONT_BUTTONS = Font.loadFont("file:src/fonts/segoeui.ttf", 12);
+	public static final String CLINIC_WHITE = "-fx-background-color: rgb(249,246,246)";
+	public static final String BLACK_BLIGHT = "-fx-background-color: rgb(11,10,9)";
+	public static final String MANSFIELD_GREY = "-fx-background-color: rgb(211,211,211)";
+	public static final String CLASSIC_SCRUB_BLUE = "-fx-background-color: rgb(35,91,170)";
+	public static final String PALLIATIVE_RED = "-fx-background-color: rgb(208,38,34)";
+	public static final String POVIDONE_ORANGE = "-fx-background-color: rgb(246,168,0)";
+	public static final String SICKLY_CYAN = "-fx-background-color: rgb(0,200,215)";
+	public static final String BLUE_CONTENT_CLR = "-fx-background-color: rgb(112,189,243)";
 
 	public PatientRecordsScene(Stage stage, double sizeX, double sizeY) {
 		this.stage = stage;
@@ -56,10 +79,11 @@ public class PatientRecordsScene {
 		TableCell cell = new TableCell();
 		Button backBtn = new Button("Back");
 		Label databaseLabel = new Label ("Patient Database");
-		databaseLabel.setFont(MainViewScene.MAIN_FONT_HEADING);
+		databaseLabel.setFont(MAIN_FONT_HEADING);
 		TextArea textArea = new TextArea();
 		textArea.setMaxSize(1000, 30);
 		textArea.setMinSize(190, 30);
+		
 		
 		// Create button click handler
 		EventHandler<ActionEvent> backBtnClick = new EventHandler<ActionEvent>() {
@@ -187,9 +211,6 @@ public class PatientRecordsScene {
                     {
                         btn.setOnAction((ActionEvent event) -> {
                             Patients data = getTableView().getItems().get(getIndex());
-                            if(data.get(getIndex()) == 13) {
-                            	
-                            }
                         });
                     }
 
