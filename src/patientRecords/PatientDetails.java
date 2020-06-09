@@ -5,13 +5,35 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import mainView.MainViewScene;
 
 public class PatientDetails {
 	// component/node variables
 		private Stage stage;
 		private Scene scene;
+		
+		// Colors and styling
+		private String background = CLINIC_WHITE;
+		private String foreground = BLACK_BLIGHT;
+		private String accent = POVIDONE_ORANGE;
+		private String btnBackground = CLASSIC_SCRUB_BLUE;
+		private Color btnForeground = Color.rgb(249, 246, 246); 
+		private Color txtForeground = Color.rgb(11,10,9);
+		
+		// Colors and Styling CONSTANTS
+		public static final Font MAIN_FONT_HEADING = Font.loadFont("file:src/fonts/segoeui.ttf", 20);
+		public static final Font MAIN_FONT_BODY = Font.loadFont("file:src/fonts/segoeui.ttf", 16);
+		public static final Font MAIN_FONT_BUTTONS = Font.loadFont("file:src/fonts/segoeui.ttf", 12);
+		public static final String CLINIC_WHITE = "-fx-background-color: rgb(249,246,246)";
+		public static final String BLACK_BLIGHT = "-fx-background-color: rgb(11,10,9)";
+		public static final String MANSFIELD_GREY = "-fx-background-color: rgb(211,211,211)";
+		public static final String CLASSIC_SCRUB_BLUE = "-fx-background-color: rgb(35,91,170)";
+		public static final String PALLIATIVE_RED = "-fx-background-color: rgb(208,38,34)";
+		public static final String POVIDONE_ORANGE = "-fx-background-color: rgb(246,168,0)";
+		public static final String SICKLY_CYAN = "-fx-background-color: rgb(0,200,215)";
+		public static final String BLUE_CONTENT_CLR = "-fx-background-color: rgb(112,189,243)";
 
 		public PatientDetails(Stage stage, double sizeX, double sizeY) {
 			this.stage = stage;
@@ -24,15 +46,19 @@ public class PatientDetails {
 			gridPane.setGridLinesVisible(true);
 			GridPane gridPaneInside = new GridPane();
 			gridPaneInside.setGridLinesVisible(false);
-			Label patientName = new Label("Name");
+			Label patientName = new Label("Jesse Williams");
 			Label patientPhone = new Label("Contact number: ");
 			Label patientAddress = new Label("Residential address: ");
-			Label patientAge = new Label("Age:");
-			Label patientGender = new Label("Gender: ");
-			Label patientHeight = new Label("Height: ");
-			Label patientWeight = new Label("Weight: ");
-			Label currentMedication = new Label("Current medications:\n");
-			Label lastVisit = new Label("Date/Reason of last visit:\n");
+			Label patientAge = new Label("Age: 38");
+			Label patientGender = new Label("Gender: M");
+			Label patientHeight = new Label("Height: 1.85m");
+			Label patientWeight = new Label("Weight: 93kg");
+			Label currentMedication = new Label("Current medications:\nNone");
+			Label lastVisit = new Label("Date/Reason of last visit:\n17/7/2018\nLast visit was due to a MVA, where Williams"
+					+ "was knocked off his motorcycle.\nResulted in serious injuries to his right leg"
+					+ "and lesser injuries to his right leg.\nRight arm and shoulder were also badly injured"
+					+ "Patient was weating a helmet, which protected his head.\n Neck suffered from whiplash.\n"
+					+ "A CT Scan was used to determine Williams full injuries.\nPlease see appointment notes for more information.");
 			Label nextVisit = new Label("Date/Reason of next visit:\n");
 			
 			//Layout
@@ -41,16 +67,16 @@ public class PatientDetails {
 			content.setBottom(btnArea);
 			
 			//Text
-			patientName.setFont(MainViewScene.MAIN_FONT_HEADING);
-			patientPhone.setFont(MainViewScene.MAIN_FONT_BODY);
-			patientAddress.setFont(MainViewScene.MAIN_FONT_BODY);
-			patientAge.setFont(MainViewScene.MAIN_FONT_BODY);
-			patientGender.setFont(MainViewScene.MAIN_FONT_BODY);
-			patientHeight.setFont(MainViewScene.MAIN_FONT_BODY);
-			patientWeight.setFont(MainViewScene.MAIN_FONT_BODY);
-			currentMedication.setFont(MainViewScene.MAIN_FONT_BODY);
-			lastVisit.setFont(MainViewScene.MAIN_FONT_BODY);
-			nextVisit.setFont(MainViewScene.MAIN_FONT_BODY);
+			patientName.setFont(MAIN_FONT_HEADING);
+			patientPhone.setFont(MAIN_FONT_BODY);
+			patientAddress.setFont(MAIN_FONT_BODY);
+			patientAge.setFont(MAIN_FONT_BODY);
+			patientGender.setFont(MAIN_FONT_BODY);
+			patientHeight.setFont(MAIN_FONT_BODY);
+			patientWeight.setFont(MAIN_FONT_BODY);
+			currentMedication.setFont(MAIN_FONT_BODY);
+			lastVisit.setFont(MAIN_FONT_BODY);
+			nextVisit.setFont(MAIN_FONT_BODY);
 			
 			//Layout
 			gridPane.add(patientName, 0, 0);
