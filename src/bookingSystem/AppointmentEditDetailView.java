@@ -1,15 +1,22 @@
+
 package bookingSystem;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -26,11 +33,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class AppointmentDetailView extends Stage {
+public class AppointmentEditDetailView extends Stage {
 
 	// global instance variables
 	private double offsetX;
 	private double offsetY;
+
+	private static final ObservableList<String> TIMES = FXCollections.observableArrayList("7am", "8am", "9am", "10am",
+			"11am", "Noon", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm");
 
 	// Foundation components
 	private Stage stage;
@@ -41,25 +51,26 @@ public class AppointmentDetailView extends Stage {
 	private VBox content;
 	// TITLE
 	private HBox titleAndExit;
-	private Label title;
+	private TextField title;
 	private Button exitBtn;
 	// DATE
 	private HBox dateTitle;
 	private Label dateTitleLbl;
-	private HBox dateField;
-	private Label date;
+	private HBox datePicker;
+	private TextField date;
+	private ImageView dateImage;
 	// TIME
 	private HBox timeTitle;
 	private Label startTitle;
 	private Label endTitle;
 	private HBox timeField;
-	private Label startTime;
-	private Label endTime;
+	private ComboBox startTime;
+	private ComboBox endTime;
 	// COMMENT
 	private HBox commentTitle;
 	private Label commentTitleLbl;
 	private HBox commentField;
-	private Label commentsLbl;
+	private TextArea commentsLbl;
 	// EDIT
 	private HBox editBar;
 	private Button editBtn;
@@ -90,7 +101,7 @@ public class AppointmentDetailView extends Stage {
 	private static final String EVENT_BORDER = "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
 			+ "-fx-border-color: rgb(211, 211, 211)";
 
-	public AppointmentDetailView(double positionX, double positionY, Appointment appointment) {
+	public AppointmentEditDetailView(double positionX, double positionY, Appointment appointment) {
 
 		this.appointment = appointment;
 		// STAGE
@@ -124,7 +135,7 @@ public class AppointmentDetailView extends Stage {
 
 		// TITLE
 		titleAndExit = new HBox();
-		title = new Label(appointment.getTitle());
+		title = new TextField(appointment.getTitle());
 		exitBtn = new Button();
 		exitBtn.setGraphic(new ImageView(new Image("images/cancelBlack.png", 32, 32, true, false)));
 		titleAndExit.getChildren().addAll(title, createSpacer(), exitBtn);
@@ -133,9 +144,11 @@ public class AppointmentDetailView extends Stage {
 		dateTitle = new HBox();
 		dateTitleLbl = new Label("Date");
 		dateTitle.getChildren().add(dateTitleLbl);
-		dateField = new HBox();
-		date = new Label(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date(appointment.getStartTime())));
-		dateField.getChildren().add(date);
+		datePicker = new HBox();
+		date = new TextField(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date(appointment.getStartTime())));
+		date.setEditable(false);
+		dateImage = new ImageView(new Image("images/dropdown.png"));
+		datePicker.getChildren().addAll(date, dateImage);
 
 		// TIME
 		timeTitle = new HBox();
@@ -143,8 +156,8 @@ public class AppointmentDetailView extends Stage {
 		endTitle = new Label("End Time");
 		timeTitle.getChildren().addAll(startTitle, createSpacer(), endTitle, createSpacer());
 		timeField = new HBox();
-		startTime = new Label(new SimpleDateFormat("hh:mm a").format(new Date(appointment.getStartTime())));
-		endTime = new Label(new SimpleDateFormat("hh:mm a").format(new Date(appointment.getEndTime())));
+		startTime = new ComboBox<String>(TIMES);
+		endTime = new ComboBox<String>(TIMES);
 		timeField.getChildren().addAll(startTime, createSpacer(), endTime, createSpacer());
 
 		// COMMENT
@@ -152,7 +165,7 @@ public class AppointmentDetailView extends Stage {
 		commentTitleLbl = new Label("Comments");
 		commentTitle.getChildren().add(commentTitleLbl);
 		commentField = new HBox();
-		commentsLbl = new Label(appointment.getDescription());
+		commentsLbl = new TextArea(appointment.getDescription());
 		commentField.getChildren().add(commentsLbl);
 
 		// EDIT
@@ -162,7 +175,7 @@ public class AppointmentDetailView extends Stage {
 
 		content.getChildren().add(titleAndExit);
 		content.getChildren().add(dateTitle);
-		content.getChildren().add(dateField);
+		content.getChildren().add(datePicker);
 		content.getChildren().add(timeTitle);
 		content.getChildren().add(timeField);
 		content.getChildren().add(commentTitle);
@@ -184,21 +197,21 @@ public class AppointmentDetailView extends Stage {
 		scene.getRoot().setEffect(dropShadow);
 
 		// TITLE
-//		titleAndExit;
+//			titleAndExit;
 		title.setFont(LARGE_FONT);
-		title.setWrapText(true);
+		
 		exitBtn.setBackground(Background.EMPTY);
 
 		// DATE
-//		dateTitle;
+//			dateTitle;
 		dateTitleLbl.setFont(MAIN_FONT);
 		dateTitleLbl.setTextFill(TEXT_CLR);
 		dateTitleLbl.setPadding(LBL_PADDING);
-//		dateField;
+//			dateField;
 		date.setFont(MAIN_FONT);
-		date.setTextFill(TIME_TEXT_CLR);
-//		// TIME
-//		timeTitle.setHgrow(startTime, Priority.ALWAYS);
+		date.setPromptText(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date(appointment.getEndTime())));
+//			// TIME
+//			timeTitle.setHgrow(startTime, Priority.ALWAYS);
 		// startTitle
 		startTitle.setFont(MAIN_FONT);
 		startTitle.setTextFill(TEXT_CLR);
@@ -208,25 +221,24 @@ public class AppointmentDetailView extends Stage {
 		endTitle.setTextFill(TEXT_CLR);
 		endTitle.setPadding(LBL_PADDING);
 
-//		startTime;
-		startTime.setFont(MAIN_FONT);
-		startTime.setTextFill(TIME_TEXT_CLR);
-//		endTime;
-		endTime.setFont(MAIN_FONT);
-		endTime.setTextFill(TIME_TEXT_CLR);
-//		// COMMENT
-//		commentTitle;
-//		commentTitleLbl;
+//			startTime;
+//		startTime.setFont(MAIN_FONT);
+//		startTime.setTextFill(TIME_TEXT_CLR);
+//			endTime;
+//		endTime.setFont(MAIN_FONT);
+//		endTime.setTextFill(TIME_TEXT_CLR);
+//			// COMMENT
+//			commentTitle;
+//			commentTitleLbl;
 		commentTitleLbl.setFont(MAIN_FONT);
 		commentTitleLbl.setTextFill(TEXT_CLR);
 		commentTitleLbl.setPadding(LBL_PADDING);
-//		commentField;
+//			commentField;
 		commentsLbl.setFont(SMALL_FONT);
-		commentsLbl.setTextFill(TIME_TEXT_CLR);
 		commentsLbl.setWrapText(true);
-//		// EDIT
-//		editBar;
-//		editBtn;
+//			// EDIT
+//			editBar;
+//			editBtn;
 		editBtn.setBackground(Background.EMPTY);
 		editBtn.setPadding(new Insets(32, 16, 8, 0));
 		editBtn.setFont(EDIT_BTN_FONT);
@@ -240,15 +252,6 @@ public class AppointmentDetailView extends Stage {
 			public void handle(ActionEvent e) {
 				// close all of the post it notes
 				stage.close();
-			}
-		};
-
-		// edit button
-		EventHandler<ActionEvent> editButton = new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				// close all of the post it notes
-				new AppointmentEditDetailView(stage.getX(), stage.getY(), appointment);
 			}
 		};
 
@@ -280,7 +283,7 @@ public class AppointmentDetailView extends Stage {
 		};
 
 		exitBtn.setOnAction(exitButton);
-		editBtn.setOnAction(editButton);
+
 		content.setOnMousePressed(buttonAreaMousePress);
 		content.setOnMouseDragged(buttonAreaDrag);
 
