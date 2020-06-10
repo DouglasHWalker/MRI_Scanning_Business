@@ -1,8 +1,9 @@
 
 package bookingSystem;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import javafx.collections.FXCollections;
@@ -10,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,6 +25,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -73,12 +76,13 @@ public class AppointmentEditDetailView extends Stage {
 	private TextArea commentsLbl;
 	// EDIT
 	private HBox editBar;
-	private Button editBtn;
+	private Button saveBtn;
 
 	// Style CONSTANTS
 	private static final Insets PADDING = new Insets(32);
 	private static final Insets LBL_PADDING = new Insets(12, 0, 8, 0);
 	private static final int MAX_WIDTH = 500;
+	private static final int MIN_WIDTH = 400;
 	// fonts
 	private static final Font SMALL_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 14);
 	private static final Font MAIN_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 16);
@@ -122,6 +126,13 @@ public class AppointmentEditDetailView extends Stage {
 		// STAGE
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.initStyle(StageStyle.UNDECORATED);
+		// Shadow
+		content.setBackground(new Background(new BackgroundFill(Color.WHITE, null, new Insets(6, 12, 12, 6))));
+		stage.initStyle(StageStyle.TRANSPARENT);
+		scene.setFill(Color.TRANSPARENT);
+		DropShadow dropShadow = new DropShadow(12, 2, 2, Color.DARKGRAY);
+		scene.getRoot().setEffect(dropShadow);
+
 		// add scene
 		stage.setScene(scene);
 
@@ -170,8 +181,8 @@ public class AppointmentEditDetailView extends Stage {
 
 		// EDIT
 		editBar = new HBox();
-		editBtn = new Button("edit");
-		editBar.getChildren().addAll(createSpacer(), editBtn);
+		saveBtn = new Button("save");
+		editBar.getChildren().addAll(createSpacer(), saveBtn);
 
 		content.getChildren().add(titleAndExit);
 		content.getChildren().add(dateTitle);
@@ -189,17 +200,12 @@ public class AppointmentEditDetailView extends Stage {
 
 		content.setPadding(PADDING);
 		content.setMaxWidth(MAX_WIDTH);
-		// Shadow
-		content.setBackground(new Background(new BackgroundFill(Color.WHITE, null, new Insets(6, 12, 12, 6))));
-		stage.initStyle(StageStyle.TRANSPARENT);
-		scene.setFill(Color.TRANSPARENT);
-		DropShadow dropShadow = new DropShadow(12, 2, 2, Color.DARKGRAY);
-		scene.getRoot().setEffect(dropShadow);
+		content.setMinWidth(MIN_WIDTH);
 
 		// TITLE
 //			titleAndExit;
 		title.setFont(LARGE_FONT);
-		
+
 		exitBtn.setBackground(Background.EMPTY);
 
 		// DATE
@@ -209,7 +215,11 @@ public class AppointmentEditDetailView extends Stage {
 		dateTitleLbl.setPadding(LBL_PADDING);
 //			dateField;
 		date.setFont(MAIN_FONT);
+		date.setMinWidth(250);
 		date.setPromptText(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date(appointment.getEndTime())));
+		// date picker
+		datePicker.setAlignment(Pos.CENTER_LEFT);
+		datePicker.setSpacing(8);
 //			// TIME
 //			timeTitle.setHgrow(startTime, Priority.ALWAYS);
 		// startTitle
@@ -239,10 +249,10 @@ public class AppointmentEditDetailView extends Stage {
 //			// EDIT
 //			editBar;
 //			editBtn;
-		editBtn.setBackground(Background.EMPTY);
-		editBtn.setPadding(new Insets(32, 16, 8, 0));
-		editBtn.setFont(EDIT_BTN_FONT);
-		editBtn.setTextFill(INDICATOR_CLR);
+		saveBtn.setBackground(Background.EMPTY);
+		saveBtn.setPadding(new Insets(32, 16, 8, 0));
+		saveBtn.setFont(EDIT_BTN_FONT);
+		saveBtn.setTextFill(INDICATOR_CLR);
 	}
 
 	private void initComponentEvents() {
@@ -250,9 +260,81 @@ public class AppointmentEditDetailView extends Stage {
 		EventHandler<ActionEvent> exitButton = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				// close all of the post it notes
 				stage.close();
 			}
+		};
+
+		// exit button
+		EventHandler<ActionEvent> saveButton = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				// title
+				appointment.setTitle(title.getText());
+				// date
+				Date newDate = null;
+				try {
+					newDate = new SimpleDateFormat("EEEE, dd MMMM YYYY").parse(date.getText());
+				} catch (ParseException ex) {
+					ex.getMessage();
+				}
+				appointment.setStartTime(newDate.getTime());
+				Calendar newTime = Calendar.getInstance();
+				newTime.setTimeInMillis(newDate.getTime());
+				// start time
+				int time = calcTime((String) startTime.getValue());
+				newTime.set(Calendar.HOUR_OF_DAY, time);
+				appointment.setStartTime(newTime.getTimeInMillis());
+				// end time
+				time = calcTime((String) endTime.getValue());
+				newTime.set(Calendar.HOUR_OF_DAY, time);
+				appointment.setEndTime(newTime.getTimeInMillis());
+				// comments
+				appointment.setDescription(commentsLbl.getText());
+
+				// close stage
+				stage.close();
+			}
+
+			private int calcTime(String value) {
+
+				switch (value) {
+				case "7am":
+					return 7;
+				case "8am":
+					return 8;
+				case "9am":
+					return 9;
+				case "10am":
+					return 10;
+				case "11am":
+					return 11;
+				case "Noon":
+					return 12;
+				case "1pm":
+					return 13;
+				case "2pm":
+					return 14;
+				case "3pm":
+					return 15;
+				case "4pm":
+					return 16;
+				case "5pm":
+					return 17;
+				case "6pm":
+					return 18;
+				case "7pm":
+					return 19;
+				case "8pm":
+					return 20;
+				case "9pm":
+					return 21;
+				case "10pm":
+					return 22;
+				default:
+					return 0;
+				}
+			}
+
 		};
 
 		/**
@@ -282,7 +364,58 @@ public class AppointmentEditDetailView extends Stage {
 			}
 		};
 
+		/**
+		 * Produces a date picker to use
+		 */
+		EventHandler<MouseEvent> newDatePicker = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+
+				Stage stagePop = new Stage();
+				// set position
+				stagePop.setX(e.getScreenX());
+				stagePop.setY(e.getScreenY());
+				
+				// SCENE
+				BorderPane bp = new BorderPane();
+				bp.setCenter(new MonthView(Calendar.getInstance()));
+				
+				bp.setOnMouseClicked(new EventHandler<MouseEvent>() {
+					@Override
+					public void handle(MouseEvent e) {
+						stagePop.close();
+					}
+				} );
+
+				Scene scenePop = new Scene(bp);
+				// Shadow
+				bp.setBackground(new Background(new BackgroundFill(Color.WHITE, null, new Insets(6, 12, 12, 6))));
+				stagePop.initStyle(StageStyle.TRANSPARENT);
+				scenePop.setFill(Color.TRANSPARENT);
+				DropShadow dropShadow = new DropShadow(12, 2, 2, Color.DARKGRAY);
+				scenePop.getRoot().setEffect(dropShadow);
+				// STAGE
+				stagePop.initModality(Modality.APPLICATION_MODAL);
+				stagePop.initStyle(StageStyle.UNDECORATED);
+
+				
+				
+				// add scene
+				stagePop.setScene(scenePop);
+
+				setComponentStyles();
+				initComponentEvents();
+
+				// display
+				stagePop.showAndWait();
+			}
+		};
+
 		exitBtn.setOnAction(exitButton);
+		saveBtn.setOnAction(saveButton);
+
+		datePicker.setOnMouseClicked(newDatePicker);
+		date.setOnMouseClicked(newDatePicker);
 
 		content.setOnMousePressed(buttonAreaMousePress);
 		content.setOnMouseDragged(buttonAreaDrag);
@@ -293,6 +426,10 @@ public class AppointmentEditDetailView extends Stage {
 		final Region spacer = new Region();
 		HBox.setHgrow(spacer, Priority.ALWAYS);
 		return spacer;
+	}
+
+	public Appointment getAppointment() {
+		return this.appointment;
 	}
 
 }

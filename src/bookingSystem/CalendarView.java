@@ -1,12 +1,12 @@
 package bookingSystem;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
 
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -64,10 +64,9 @@ public class CalendarView extends BorderPane {
 	// instance variables
 	private Calendar activeDate;
 	private Date date = new Date();
-	private ArrayList<Appointment> appointments = new Appointment().getAppointments();
-	private static final String[] TIMES = new String[] { "Midnight", "1am", "2am", "3am", "4am", "5am", "6am", "7am",
-			"8am", "9am", "10am", "11am", "Noon", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm",
-			"11pm" };
+	private ObservableList<Appointment> appointments = new Appointment().getAppointments();
+	private static final String[] TIMES = new String[] { "7am", "8am", "9am", "10am", "11am", "Noon", "1pm", "2pm",
+			"3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", };
 
 	// components
 	private BorderPane header;
@@ -97,14 +96,18 @@ public class CalendarView extends BorderPane {
 	private VBox timeSpace;
 	private Label timeLbl;
 	private BorderPane eventCell;
-	
-	
 
 	public CalendarView(Calendar date) {
 		super();
 		this.activeDate = date;
 
 		// TODO: clean code
+		appointments.addListener(new ListChangeListener<Appointment>() {
+			@Override
+			public void onChanged(Change change) {
+				change.next();
+			}
+		});
 
 		initializeComponents();
 		setComponentStyles();
@@ -319,6 +322,7 @@ public class CalendarView extends BorderPane {
 
 		// time space
 		timeSpace = new VBox();
+		timeSpace.setMinWidth(50);
 		timeSpace.setAlignment(Pos.CENTER_RIGHT);
 		addTimeLabels();
 
@@ -326,20 +330,19 @@ public class CalendarView extends BorderPane {
 		// events
 		for (int timeRow = 0; timeRow < 7; timeRow++) {
 			// for each time
-			for (int dayCol = 0; dayCol < 24; dayCol++) {
+			for (int dayCol = 0; dayCol < TIMES.length; dayCol++) {
 				// for each day
 				eventCell = appointments.get(appointCount);
 				appointCount++;
 				eventGrid.add(eventCell, timeRow, dayCol);
 				addEventGridBorder(timeRow, dayCol);
-				
+
 			}
 			ColumnConstraints col = new ColumnConstraints();
 			col.setHgrow(Priority.NEVER);
 			col.setPercentWidth(100);
 			eventGrid.getColumnConstraints().add(col);
 		}
-			
 
 		eventGroup.getChildren().addAll(timeSpace, eventGrid);
 		HBox.setHgrow(eventGrid, Priority.ALWAYS);

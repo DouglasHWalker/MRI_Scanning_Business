@@ -68,6 +68,7 @@ public class AppointmentDetailView extends Stage {
 	private static final Insets PADDING = new Insets(32);
 	private static final Insets LBL_PADDING = new Insets(12, 0, 8, 0);
 	private static final int MAX_WIDTH = 500;
+	private static final int MIN_WIDTH = 400;
 	// fonts
 	private static final Font SMALL_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 14);
 	private static final Font MAIN_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 16);
@@ -111,6 +112,12 @@ public class AppointmentDetailView extends Stage {
 		// STAGE
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.initStyle(StageStyle.UNDECORATED);
+		// Shadow
+		content.setBackground(new Background(new BackgroundFill(Color.WHITE, null, new Insets(6, 12, 12, 6))));
+		stage.initStyle(StageStyle.TRANSPARENT);
+		scene.setFill(Color.TRANSPARENT);
+		DropShadow dropShadow = new DropShadow(12, 2, 2, Color.DARKGRAY);
+		scene.getRoot().setEffect(dropShadow);
 		// add scene
 		stage.setScene(scene);
 
@@ -176,12 +183,7 @@ public class AppointmentDetailView extends Stage {
 
 		content.setPadding(PADDING);
 		content.setMaxWidth(MAX_WIDTH);
-		// Shadow
-		content.setBackground(new Background(new BackgroundFill(Color.WHITE, null, new Insets(6, 12, 12, 6))));
-		stage.initStyle(StageStyle.TRANSPARENT);
-		scene.setFill(Color.TRANSPARENT);
-		DropShadow dropShadow = new DropShadow(12, 2, 2, Color.DARKGRAY);
-		scene.getRoot().setEffect(dropShadow);
+		content.setMinWidth(MIN_WIDTH);
 
 		// TITLE
 //		titleAndExit;
@@ -248,7 +250,11 @@ public class AppointmentDetailView extends Stage {
 			@Override
 			public void handle(ActionEvent e) {
 				// close all of the post it notes
-				new AppointmentEditDetailView(stage.getX(), stage.getY(), appointment);
+				AppointmentEditDetailView detailEditView = new AppointmentEditDetailView(stage.getX(), stage.getY(),
+						appointment);
+				// display
+				appointment = detailEditView.getAppointment();
+				resetFields();
 			}
 		};
 
@@ -286,10 +292,29 @@ public class AppointmentDetailView extends Stage {
 
 	}
 
+	private void resetFields() {
+		// TITLE
+		title.setText(appointment.getTitle());
+		
+		// DATE
+		date.setText(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date(appointment.getStartTime())));
+	
+		// TIME
+		startTime.setText(new SimpleDateFormat("hh:mm a").format(new Date(appointment.getStartTime())));
+		endTime.setText(new SimpleDateFormat("hh:mm a").format(new Date(appointment.getEndTime())));
+	
+		// COMMENT
+		commentsLbl.setText(appointment.getDescription());
+	}
+
 	private Node createSpacer() {
 		final Region spacer = new Region();
 		HBox.setHgrow(spacer, Priority.ALWAYS);
 		return spacer;
+	}
+
+	public Appointment getAppointment() {
+		return this.appointment;
 	}
 
 }
