@@ -1,6 +1,7 @@
 package bookingSystem;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -11,7 +12,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -34,6 +34,10 @@ public class MonthView extends GridPane {
 	private Button prevMonthBtn;
 	private Circle dayIndicator;
 
+	private ArrayList<Label> dayLbls = new ArrayList<Label>();
+
+	private EventHandler<MouseEvent> lblEventFilter;
+
 	// Styling constants
 	private static final Insets PADDING = new Insets(12, 8, 12, 8);
 	private static final Insets HEADER_PADDING = new Insets(0, 8, 0, 8);
@@ -46,9 +50,12 @@ public class MonthView extends GridPane {
 	private static final String BLACK_BLIGHT = "-fx-background-color: rgb(11,10,9)";
 	private static final String CLASSIC_SCRUB_BLUE = "-fx-background-color: rgb(35,91,170)";
 
-	public MonthView(Calendar activeMonth) {
+	public MonthView(Calendar activeMonth, EventHandler eventFilter) {
 		super();
 		this.activeMonth = activeMonth;
+
+		this.lblEventFilter = eventFilter;
+
 		initializeComponents();
 		setComponentStyles();
 		setUpComponentEvents();
@@ -113,7 +120,7 @@ public class MonthView extends GridPane {
 		// add dates in month
 		Calendar tempCal = (Calendar) activeMonth.clone();
 		tempCal.set(Calendar.DAY_OF_MONTH, tempCal.getActualMinimum(Calendar.DAY_OF_MONTH));
-		
+
 		int colIndex = tempCal.get(Calendar.DAY_OF_WEEK) - 1;
 		int rowIndex = 2;
 		for (int i = 1; i <= activeMonth.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
@@ -128,7 +135,7 @@ public class MonthView extends GridPane {
 			}
 			this.add(dayLbl, colIndex, rowIndex);
 			// increment row and column index
-			if((colIndex + 1) % 7 == 0){
+			if ((colIndex + 1) % 7 == 0) {
 				rowIndex++;
 			}
 			colIndex++;
@@ -164,6 +171,15 @@ public class MonthView extends GridPane {
 			}
 		};
 		dayLbl.setOnMouseClicked(selectDate);
+		addLblEventFilter(lblEventFilter);
+
+		dayLbls.add(dayLbl);
+	}
+
+	private void addLblEventFilter(EventHandler<MouseEvent> filter) {
+		if (filter != null) {
+			dayLbl.setOnMouseClicked(filter);
+		}
 	}
 
 	private void setComponentStyles() {
@@ -190,12 +206,12 @@ public class MonthView extends GridPane {
 		nextMonthBtn.setPadding(HEADER_PADDING);
 		GridPane.setFillWidth(nextMonthBtn, true);
 		GridPane.setHalignment(nextMonthBtn, HPos.CENTER);
-		
+
 		dayIndicator.setStyle(CLASSIC_SCRUB_BLUE);
 		dayIndicator.setFill(INDICATOR_CLR);
 		GridPane.setFillWidth(dayIndicator, true);
 		GridPane.setHalignment(dayIndicator, HPos.CENTER);
-		
+
 	}
 
 	private void setUpComponentEvents() {
@@ -223,6 +239,86 @@ public class MonthView extends GridPane {
 
 		nextMonthBtn.setOnAction(onNextMonthBtnClick);
 		prevMonthBtn.setOnAction(onPrevMonthBtnClick);
+
+	}
+
+	public ArrayList<Label> getDayLabels() {
+		return this.dayLbls;
+	}
+
+	public void setDayLabels(ArrayList<Label> dayLabels) {
+		this.dayLbls = dayLabels;
+
+		this.getChildren().clear();
+		// Month Label
+		date = new Date(activeMonth.getTimeInMillis());
+		monthLbl = new Label(new SimpleDateFormat("MMM, YYY", Locale.ENGLISH).format(date));
+		this.add(monthLbl, 0, 0, 5, 1);
+
+		// Change month buttons
+		prevMonthBtn = new Button();
+		ImageView prev = new ImageView("images/previous.png");
+		prev.setFitHeight(14);
+		prevMonthBtn.setGraphic(prev);
+		this.add(prevMonthBtn, 5, 0);
+
+		nextMonthBtn = new Button();
+		ImageView next = new ImageView("images/next.png");
+		next.setFitHeight(14);
+		nextMonthBtn.setGraphic(next);
+		this.add(nextMonthBtn, 6, 0);
+
+		// Day indicator
+		dayIndicator = new Circle(16);
+
+		// add days
+		updateDayLbl("S");
+		this.add(dayLbl, 0, 1);
+		updateDayLbl("M");
+		this.add(dayLbl, 1, 1);
+		updateDayLbl("T");
+		this.add(dayLbl, 2, 1);
+		updateDayLbl("W");
+		this.add(dayLbl, 3, 1);
+		updateDayLbl("T");
+		this.add(dayLbl, 4, 1);
+		updateDayLbl("F");
+		this.add(dayLbl, 5, 1);
+		updateDayLbl("S");
+		this.add(dayLbl, 6, 1);
+
+		int dayLabelIndex = 0;
+
+		// add dates in month
+		Calendar tempCal = (Calendar) activeMonth.clone();
+		tempCal.set(Calendar.DAY_OF_MONTH, tempCal.getActualMinimum(Calendar.DAY_OF_MONTH));
+
+		int colIndex = tempCal.get(Calendar.DAY_OF_WEEK) - 1;
+		int rowIndex = 2;
+		for (int i = 1; i <= activeMonth.getActualMaximum(Calendar.DAY_OF_MONTH); i++) {
+			// find colIndex
+			colIndex = colIndex % 7;
+			// update and add label
+			updateDayLbl(i + "", dayLabelIndex);
+			dayLabelIndex++;
+			// add indicator
+			if (isCurrentDate(tempCal)) {
+				dayLbl.setTextFill(ALT_TEXT_CLR);
+				this.add(dayIndicator, colIndex, rowIndex);
+			}
+			this.add(dayLbl, colIndex, rowIndex);
+			// increment row and column index
+			if ((colIndex + 1) % 7 == 0) {
+				rowIndex++;
+			}
+			colIndex++;
+			// increment tempCal
+			tempCal.add(Calendar.DAY_OF_YEAR, 1);
+		}
+	}
+
+	private void updateDayLbl(String string, int dayLabelIndex) {
+		dayLbl = dayLbls.get(dayLabelIndex);
 
 	}
 

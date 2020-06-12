@@ -40,6 +40,7 @@ public class Appointment extends BorderPane {
 		infoLbl.setWrapText(true);
 		infoLbl.setMaxHeight(75);
 		this.setTop(infoLbl);
+
 	}
 
 	public long getStartTime() {
@@ -121,47 +122,46 @@ public class Appointment extends BorderPane {
 		appointments.set(34, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(34).setOnMouseClicked(eventDetailClick);
-		
+
 		appointments.set(36, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(36).setOnMouseClicked(eventDetailClick);
-		
+
 		appointments.set(37, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(37).setOnMouseClicked(eventDetailClick);
-		
+
 		appointments.set(33 + 16, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(33 + 16).setOnMouseClicked(eventDetailClick);
-		
+
 		appointments.set(35 + 16, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(35 + 16).setOnMouseClicked(eventDetailClick);
-		
+
 		appointments.set(36 + 16, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(36 + 16).setOnMouseClicked(eventDetailClick);
-		
+
 		appointments.set(37 + 16, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(37 + 16).setOnMouseClicked(eventDetailClick);
-		
+
 		appointments.set(33 + 48, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(33 + 48).setOnMouseClicked(eventDetailClick);
-		
+
 		appointments.set(35 + 48, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(35 + 48).setOnMouseClicked(eventDetailClick);
-		
+
 		appointments.set(36 + 48, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(36 + 48).setOnMouseClicked(eventDetailClick);
-		
+
 		appointments.set(37 + 48, new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(),
 				"Patient Checkup", "Soft Tissue Injury", "Adam Ondra"));
 		appointments.get(37 + 48).setOnMouseClicked(eventDetailClick);
-		
 
 		return appointments;
 	}

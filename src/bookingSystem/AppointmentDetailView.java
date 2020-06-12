@@ -295,14 +295,14 @@ public class AppointmentDetailView extends Stage {
 	private void resetFields() {
 		// TITLE
 		title.setText(appointment.getTitle());
-		
+
 		// DATE
 		date.setText(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date(appointment.getStartTime())));
-	
+
 		// TIME
 		startTime.setText(new SimpleDateFormat("hh:mm a").format(new Date(appointment.getStartTime())));
 		endTime.setText(new SimpleDateFormat("hh:mm a").format(new Date(appointment.getEndTime())));
-	
+
 		// COMMENT
 		commentsLbl.setText(appointment.getDescription());
 	}

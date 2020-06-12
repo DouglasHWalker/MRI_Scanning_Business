@@ -375,17 +375,17 @@ public class AppointmentEditDetailView extends Stage {
 				// set position
 				stagePop.setX(e.getScreenX());
 				stagePop.setY(e.getScreenY());
-				
+
 				// SCENE
 				BorderPane bp = new BorderPane();
-				bp.setCenter(new MonthView(Calendar.getInstance()));
-				
+				bp.setCenter(new MonthView(Calendar.getInstance(), null));
+
 				bp.setOnMouseClicked(new EventHandler<MouseEvent>() {
 					@Override
 					public void handle(MouseEvent e) {
 						stagePop.close();
 					}
-				} );
+				});
 
 				Scene scenePop = new Scene(bp);
 				// Shadow
@@ -398,8 +398,6 @@ public class AppointmentEditDetailView extends Stage {
 				stagePop.initModality(Modality.APPLICATION_MODAL);
 				stagePop.initStyle(StageStyle.UNDECORATED);
 
-				
-				
 				// add scene
 				stagePop.setScene(scenePop);
 

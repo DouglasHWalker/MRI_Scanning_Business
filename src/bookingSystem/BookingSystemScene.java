@@ -2,11 +2,15 @@ package bookingSystem;
 
 import java.util.Calendar;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -21,19 +25,28 @@ public class BookingSystemScene {
 	private double height;
 	// components
 	private GridPane toolBar;
-	private MonthView monthView = new MonthView(Calendar.getInstance());
-	private MonthView calendarList = new MonthView(Calendar.getInstance());
-	private MonthView filterList = new MonthView(Calendar.getInstance());
+	private MonthView monthView;
+	private MonthView calendarList = new MonthView(Calendar.getInstance(), null);
+	private MonthView filterList = new MonthView(Calendar.getInstance(), null);
 	private CalendarView calendarView = new CalendarView(Calendar.getInstance());
-	
 
 	private Button backBtn;
-	
+
 	public BookingSystemScene(Stage stage, double sizeX, double sizeY) {
 
 		this.width = sizeX;
 		this.height = sizeY;
 		this.stage = stage;
+
+		this.monthView = new MonthView(Calendar.getInstance(), new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				Calendar newDate = monthView.getActiveMonth();
+				newDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(((Label) e.getSource()).getText()));
+				calendarView.setActiveMonth(newDate);
+				calendarView.refresh();
+			}
+		});
 
 		initializeComponents();
 		setComponentStyles();
@@ -45,13 +58,13 @@ public class BookingSystemScene {
 
 		// Contents
 		toolBar = new GridPane();
-		toolBar.setPadding(new Insets(50,16,0,16));
+		toolBar.setPadding(new Insets(50, 16, 0, 16));
 		toolBar.add(monthView, 0, 0);
 		toolBar.add(calendarList, 0, 1);
 		toolBar.add(filterList, 0, 2);
 		backBtn = new Button("Back");
 
-		// content layout and styles calendar 
+		// content layout and styles calendar
 		content = new BorderPane();
 		content.setStyle("-fx-background-color: rgb(255,255,255)");
 		// component positioning
@@ -78,6 +91,7 @@ public class BookingSystemScene {
 				stage.setScene(scene);
 			}
 		};
+
 		// add handler to button
 		backBtn.setOnAction(backBtnClick);
 	}

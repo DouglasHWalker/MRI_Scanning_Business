@@ -74,7 +74,7 @@ public class CalendarView extends BorderPane {
 	private Label monthLbl;
 	private Button prevBtn;
 	private Button nextBtn;
-
+	// button bar
 	private Button todayBtn;
 	private GridPane changeViewTab;
 	private Rectangle activeButton;
@@ -403,9 +403,7 @@ public class CalendarView extends BorderPane {
 			@Override
 			public void handle(ActionEvent e) {
 				activeDate.add(Calendar.WEEK_OF_YEAR, 1);
-				initializeComponents();
-				setComponentStyles();
-				setUpComponentEvents();
+				refresh();
 			}
 		};
 
@@ -414,20 +412,16 @@ public class CalendarView extends BorderPane {
 			@Override
 			public void handle(ActionEvent e) {
 				activeDate.add(Calendar.WEEK_OF_YEAR, -1);
-				initializeComponents();
-				setComponentStyles();
-				setUpComponentEvents();
+				refresh();
 			}
 		};
-		
-		// today navigation btn
+
+		// today navigation button
 		EventHandler<ActionEvent> onTodayBtnClick = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				activeDate = Calendar.getInstance();
-				initializeComponents();
-				setComponentStyles();
-				setUpComponentEvents();
+				refresh();
 			}
 		};
 
@@ -443,5 +437,11 @@ public class CalendarView extends BorderPane {
 
 	public void setActiveMonth(Calendar date) {
 		this.activeDate = date;
+	}
+
+	public void refresh() {
+		initializeComponents();
+		setComponentStyles();
+		setUpComponentEvents();
 	}
 }
