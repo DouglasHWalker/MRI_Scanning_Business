@@ -166,8 +166,13 @@ public class MonthView extends GridPane {
 		EventHandler<MouseEvent> selectDate = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				dateSelected = Integer.parseInt(((Label) e.getSource()).getText());
-				monthLbl.setText(String.valueOf(dateSelected));
+				try {
+					dateSelected = Integer.parseInt(((Label) e.getSource()).getText());
+					monthLbl.setText(String.valueOf(dateSelected));
+				} catch (Exception e2) {
+					
+				}
+
 			}
 		};
 		dayLbl.setOnMouseClicked(selectDate);
@@ -177,9 +182,15 @@ public class MonthView extends GridPane {
 	}
 
 	private void addLblEventFilter(EventHandler<MouseEvent> filter) {
-		if (filter != null) {
-			dayLbl.setOnMouseClicked(filter);
+		try {
+			Integer.parseInt((dayLbl.getText()));
+			if (filter != null) {
+				dayLbl.setOnMouseClicked(filter);
+			}
+		} catch (Exception e) {
+			
 		}
+
 	}
 
 	private void setComponentStyles() {

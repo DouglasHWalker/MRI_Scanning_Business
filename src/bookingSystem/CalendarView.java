@@ -63,8 +63,9 @@ public class CalendarView extends BorderPane {
 			+ "-fx-border-color: rgb(211, 211, 211)";
 	// instance variables
 	private Calendar activeDate;
+	private int firstDayInView;
 	private Date date = new Date();
-	private ObservableList<Appointment> appointments = new Appointment().getAppointments();
+	private ObservableList<Appointment> appointments;
 	private static final String[] TIMES = new String[] { "7am", "8am", "9am", "10am", "11am", "Noon", "1pm", "2pm",
 			"3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", };
 
@@ -87,7 +88,6 @@ public class CalendarView extends BorderPane {
 
 	private GridPane dateRow;
 	private Label dayLbl;
-	private Label dateLbl; // TODO: transfer the days to a different label
 	private Circle dayIndicator;
 
 	private ScrollPane eventSpace;
@@ -101,14 +101,6 @@ public class CalendarView extends BorderPane {
 		super();
 		this.activeDate = date;
 
-		// TODO: clean code
-		appointments.addListener(new ListChangeListener<Appointment>() {
-			@Override
-			public void onChanged(Change change) {
-				change.next();
-			}
-		});
-
 		initializeComponents();
 		setComponentStyles();
 		setUpComponentEvents();
@@ -117,6 +109,19 @@ public class CalendarView extends BorderPane {
 	private void initializeComponents() {
 
 		this.setStyle(CLINIC_WHITE);
+
+		// get appointments for current range (default is 7 for week)
+		int currentDateWeekPos = activeDate.get(Calendar.DAY_OF_WEEK);
+		this.firstDayInView = activeDate.get(Calendar.DATE) - (currentDateWeekPos - 1);
+		appointments = new Appointment().getAppointments(firstDayInView, 7);
+
+		// TODO: clean code
+		appointments.addListener(new ListChangeListener<Appointment>() {
+			@Override
+			public void onChanged(Change change) {
+				change.next();
+			}
+		});
 
 		initHeader();
 		initEventSpace();
@@ -327,21 +332,27 @@ public class CalendarView extends BorderPane {
 		addTimeLabels();
 
 		int appointCount = 0;
+		int colCount = 0;
 		// events
-		for (int timeRow = 0; timeRow < 7; timeRow++) {
-			// for each time
-			for (int dayCol = 0; dayCol < TIMES.length; dayCol++) {
-				// for each day
+		// for each time
+		for (int timeRow = 0; timeRow < TIMES.length; timeRow++) {
+			// for each day
+			for (int dayCol = 0; dayCol < 7; dayCol++) {
+
 				eventCell = appointments.get(appointCount);
 				appointCount++;
-				eventGrid.add(eventCell, timeRow, dayCol);
-				addEventGridBorder(timeRow, dayCol);
+				eventGrid.add(eventCell, dayCol, timeRow);
+				addEventGridBorder(dayCol, timeRow);
 
+				if (colCount < 7) {
+					ColumnConstraints col = new ColumnConstraints();
+					col.setHgrow(Priority.NEVER);
+					col.setPercentWidth(100);
+					eventGrid.getColumnConstraints().add(col);
+					colCount++;
+				}
 			}
-			ColumnConstraints col = new ColumnConstraints();
-			col.setHgrow(Priority.NEVER);
-			col.setPercentWidth(100);
-			eventGrid.getColumnConstraints().add(col);
+
 		}
 
 		eventGroup.getChildren().addAll(timeSpace, eventGrid);
