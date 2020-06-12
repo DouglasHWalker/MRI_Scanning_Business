@@ -419,9 +419,21 @@ public class CalendarView extends BorderPane {
 				setUpComponentEvents();
 			}
 		};
+		
+		// today navigation btn
+		EventHandler<ActionEvent> onTodayBtnClick = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				activeDate = Calendar.getInstance();
+				initializeComponents();
+				setComponentStyles();
+				setUpComponentEvents();
+			}
+		};
 
 		nextBtn.setOnAction(onNextMonthBtnClick);
 		prevBtn.setOnAction(onPrevMonthBtnClick);
+		todayBtn.setOnAction(onTodayBtnClick);
 	}
 
 	// Getters and Setter
