@@ -1,11 +1,19 @@
 package patientRecords;
 
+import java.io.IOException;
+
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,11 +23,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import mainView.MainViewScene;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -55,6 +66,8 @@ public class PatientRecordsScene {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public PatientRecordsScene(Stage stage, double sizeX, double sizeY) {
 		this.stage = stage;
+		
+		stage.setMaximized(true);
 
 		// Contents
 		BorderPane content = new BorderPane();
@@ -85,6 +98,8 @@ public class PatientRecordsScene {
 		btnArea.setPadding(new Insets(10, 10, 10, 10));
 		headerArea.setPadding(new Insets(20, 10, 10, 20));
 		tableView.setPadding(new Insets(20, 20, 20, 20));
+		tableView.prefHeightProperty().bind(stage.heightProperty());
+		tableView.prefWidthProperty().bind(stage.widthProperty());
 
 		final ObservableList<Patients> patient = FXCollections.observableArrayList(
 				new Patients("Blair, Amelia", "32", "F", "159", "60", "13/6/2005", "N/A", "0400 000 000",
@@ -112,7 +127,27 @@ public class PatientRecordsScene {
 				new Patients("Williams, Hank", "51", "M", "146", "85", "20/4/2020", "N/A", "0426 851 201",
 						"56 Clancey Street, Sedan"),
 				new Patients("Williams, Jesse", "38", "M", "168", "74", "17/7/2018", "31/7/2020", "0455 555 555",
-						"1000 Old Town Road, Towita"));
+						"1000 Old Town Road, Towita"),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
+				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "));
 
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		TableColumn<Patients, String> fullNameCol = new TableColumn<Patients, String>("Full Name");
@@ -209,10 +244,6 @@ public class PatientRecordsScene {
 				stage.setScene(scene);
 			}
 		});
-		
-		public void colourChanger() {
-			
-		}
 
 		// SCENE!!!
 		scene = new Scene(content, sizeX, sizeY);
