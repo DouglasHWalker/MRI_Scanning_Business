@@ -1,10 +1,11 @@
 package bookingSystem;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,6 +35,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 public class AppointmentEditView extends Stage {
 
@@ -109,7 +111,7 @@ public class AppointmentEditView extends Stage {
 	public AppointmentEditView() {
 
 		this.appointment = new Appointment();
-		
+
 		// STAGE
 		stage = new Stage();
 		// set position
@@ -269,12 +271,10 @@ public class AppointmentEditView extends Stage {
 		EventHandler<ActionEvent> saveButton = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				
 				// title
 				String name = title.getText();
-			
 				// end time
-				int  time = calcTime((String) endTime.getValue());
+				int time = calcTime((String) endTime.getValue());
 				monthView.getActiveMonth().set(Calendar.HOUR_OF_DAY, time);
 				long endT = monthView.getActiveMonth().getTimeInMillis();
 				// start time
@@ -284,7 +284,7 @@ public class AppointmentEditView extends Stage {
 				// comments
 				String description = commentsLbl.getText();
 				long startT = monthView.getActiveMonth().getTimeInMillis();
-				
+
 				appointment = new Appointment(startT, endT, name, description, name);
 				// close stage
 				stage.close();

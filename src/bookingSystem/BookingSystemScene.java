@@ -2,6 +2,7 @@ package bookingSystem;
 
 import java.util.Calendar;
 
+import javafx.animation.FadeTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -14,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import mainView.MainViewScene;
 
 public class BookingSystemScene {
@@ -41,9 +43,11 @@ public class BookingSystemScene {
 		this.monthView = new MonthView(Calendar.getInstance(), new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				buttonAnimation((Label)e.getSource());
 				Calendar newDate = monthView.getActiveMonth();
 				newDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(((Label) e.getSource()).getText()));
 				calendarView.setActiveMonth(newDate);
+				calendarView.appointmentDB.initAppointments();
 				calendarView.refresh();
 			}
 		});
@@ -98,5 +102,14 @@ public class BookingSystemScene {
 
 	public Scene getScene() {
 		return this.scene;
+	}
+	
+	public void buttonAnimation(Node node) {
+		FadeTransition ft = new FadeTransition(Duration.millis(300), node);
+		ft.setFromValue(1.0);
+		ft.setToValue(0.1);
+		ft.setCycleCount(2);
+		ft.setAutoReverse(true);
+		ft.play();
 	}
 }

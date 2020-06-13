@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -41,6 +43,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.util.Duration;
 
 public class CalendarView extends BorderPane {
 
@@ -71,7 +74,7 @@ public class CalendarView extends BorderPane {
 	private int firstDayInView;
 	private long firstSecondInView;
 	private Date date = new Date();
-	private AppointmentDB appointmentDB = new AppointmentDB();
+	public AppointmentDB appointmentDB = new AppointmentDB();
 	private ObservableList<Appointment> appointments;
 	private ObservableList<Appointment> appointmentCells;
 
@@ -113,8 +116,6 @@ public class CalendarView extends BorderPane {
 
 		int currentDateWeekPos = activeDate.get(Calendar.DAY_OF_WEEK);
 		this.firstDayInView = activeDate.get(Calendar.DATE) - (currentDateWeekPos - 1);
-		
-		
 
 		initializeComponents();
 		setComponentStyles();
@@ -141,15 +142,14 @@ public class CalendarView extends BorderPane {
 	}
 
 	private void updateAppointmentCells() {
-		System.out.println(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(activeDate.getTimeInMillis()));
 		appointments = appointmentDB.getAppointmentsInRange(activeDate, firstDayInView, VIEW_RANGE);
-		
+
 		for (Appointment appointment : appointments) {
 			// calc index and set that appointment cell index to appointment
 			appointmentCells.set(calcIndex(appointment, firstDayInView), appointment);
-			
+
 		}
-		
+
 		addAppointmentEventFilter();
 	}
 
@@ -164,22 +164,20 @@ public class CalendarView extends BorderPane {
 				refresh();
 			}
 		};
-		
-		for (Appointment app: appointments) {
+
+		for (Appointment app : appointments) {
 			app.setOnMouseClicked(eventDetailClick);
 		}
 	}
-	
+
 	private void initializeComponents() {
 
-		
-		
 		int currentDateWeekPos = activeDate.get(Calendar.DAY_OF_WEEK);
 		this.firstDayInView = activeDate.get(Calendar.DATE) - (currentDateWeekPos - 1);
 
 		initAppointmentCells();
 		updateAppointmentCells();
-		
+
 		this.setStyle(CLINIC_WHITE);
 
 		initHeader();
@@ -472,6 +470,7 @@ public class CalendarView extends BorderPane {
 		EventHandler<ActionEvent> onNextMonthBtnClick = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
+				buttonAnimation((Button) e.getSource());
 				activeDate.add(Calendar.WEEK_OF_YEAR, 1);
 				appointmentDB.initAppointments();
 				refresh();
@@ -482,6 +481,7 @@ public class CalendarView extends BorderPane {
 		EventHandler<ActionEvent> onPrevMonthBtnClick = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
+				buttonAnimation((Button) e.getSource());
 				activeDate.add(Calendar.WEEK_OF_YEAR, -1);
 				appointmentDB.initAppointments();
 				refresh();
@@ -492,6 +492,7 @@ public class CalendarView extends BorderPane {
 		EventHandler<ActionEvent> onTodayBtnClick = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
+				buttonAnimation((Button) e.getSource());
 				activeDate = Calendar.getInstance();
 				appointmentDB.initAppointments();
 				refresh();
@@ -502,15 +503,17 @@ public class CalendarView extends BorderPane {
 		EventHandler<ActionEvent> onAddBtnClick = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
+				buttonAnimation((Button) e.getSource());
 				AddAppointmentView addView = new AddAppointmentView();
 				Appointment newAppointment = addView.getAppointment();
+				try {
+					newAppointment.setInfoLblText(newAppointment.getTitle() + "\n" + newAppointment.getDescription());
+				} catch (Exception e2) {
+				}
 
-				newAppointment.setInfoLblText(newAppointment.getTitle() + "\n" + newAppointment.getDescription());
 				// calculate appointment index
 				appointmentDB.addAppointment(newAppointment);
-				System.out.println(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(activeDate.getTimeInMillis()));
 				updateAppointmentCells();
-
 				refresh();
 			}
 		};
@@ -553,5 +556,14 @@ public class CalendarView extends BorderPane {
 		initializeComponents();
 		setComponentStyles();
 		setUpComponentEvents();
+	}
+
+	public void buttonAnimation(Node node) {
+		FadeTransition ft = new FadeTransition(Duration.millis(300), node);
+		ft.setFromValue(1.0);
+		ft.setToValue(0.1);
+		ft.setCycleCount(2);
+		ft.setAutoReverse(true);
+		ft.play();
 	}
 }

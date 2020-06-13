@@ -1,18 +1,19 @@
 
 package bookingSystem;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -27,16 +28,18 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
+import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 public class AppointmentEditDetailView extends AppointmentEditView {
+
+	protected static final Paint RED_TEXT = Color.rgb(208, 38, 34);
 
 	public AppointmentEditDetailView(double positionX, double positionY, Appointment appointment) {
 		super();
@@ -186,14 +189,6 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 
 	private void initComponentEvents() {
 		// exit button
-		EventHandler<ActionEvent> exitButton = new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent e) {
-				stage.close();
-			}
-		};
-
-		// exit button
 		EventHandler<ActionEvent> saveButton = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
@@ -210,7 +205,7 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 						monthView.getActiveMonth().getActualMinimum(Calendar.MINUTE));
 				// date
 				appointment.setStartTime(monthView.getActiveMonth().getTimeInMillis());
-				
+
 				long startT = monthView.getActiveMonth().getTimeInMillis();
 
 				// title
@@ -228,6 +223,84 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 				stage.close();
 			}
 
+		};
+
+		// exit button
+		EventHandler<ActionEvent> exitButton = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				Stage prompt = new Stage();
+				prompt.initModality(Modality.APPLICATION_MODAL);
+				// set position
+				prompt.setX(Screen.getPrimary().getBounds().getWidth() / 2 - 100);
+				prompt.setY(0);
+				// animation
+				final Timeline timeline = new Timeline();
+				timeline.setCycleCount(1);
+				timeline.setAutoReverse(true);
+				DoubleProperty stageY = new SimpleDoubleProperty();
+				stageY.addListener((observable, oldValue, newValue) -> {
+					if (newValue != null && newValue.doubleValue() != Double.NaN) {
+						prompt.setY(newValue.doubleValue());
+					}
+				});
+				final KeyValue kv = new KeyValue(stageY, 500);
+				final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
+				timeline.getKeyFrames().add(kf);
+				timeline.play();
+
+				BorderPane content = new BorderPane();
+				content.setPadding(new Insets(20));
+				Label promptLbl = new Label("Save your changes?");
+				promptLbl.setMinWidth(200);
+				content.setTop(promptLbl);
+
+				HBox yesNoButtons = new HBox();
+				yesNoButtons.setPadding(new Insets(8, 0, 0, 0));
+				Button noBtn = new Button("No");
+				noBtn.setBackground(Background.EMPTY);
+				noBtn.setTextFill(RED_TEXT);
+				noBtn.setPadding(new Insets(8, 16, 8, 16));
+				noBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						prompt.close();
+						stage.close();
+					}
+				});
+				Button yesBtn = new Button("Yes");
+				yesBtn.setBackground(Background.EMPTY);
+				yesBtn.setTextFill(INDICATOR_CLR);
+				yesBtn.setPadding(new Insets(8, 16, 8, 16));
+				yesBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						prompt.close();
+						saveButton.handle(arg0);
+						stage.close();
+					}
+				});
+				yesNoButtons.getChildren().addAll(createSpacer(), noBtn, createSpacer(), yesBtn);
+				content.setBottom(yesNoButtons);
+
+				Scene promptScene = new Scene(content);
+
+				// Shadow
+				content.setBackground(new Background(new BackgroundFill(Color.WHITE, null, new Insets(6, 12, 12, 6))));
+				prompt.initStyle(StageStyle.TRANSPARENT);
+				promptScene.setFill(Color.TRANSPARENT);
+				DropShadow dropShadow = new DropShadow(12, 2, 2, Color.DARKGRAY);
+				promptScene.getRoot().setEffect(dropShadow);
+
+				// add scene
+				prompt.setScene(promptScene);
+				// display
+				prompt.showAndWait();
+
+				prompt.close();
+			}
 		};
 
 		/**
@@ -323,7 +396,7 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 		content.setOnMousePressed(buttonAreaMousePress);
 		content.setOnMouseDragged(buttonAreaDrag);
 	}
-	
+
 	private int calcTime(String value) {
 
 		switch (value) {

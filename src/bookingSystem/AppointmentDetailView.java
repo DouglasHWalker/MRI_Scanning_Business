@@ -3,6 +3,11 @@ package bookingSystem;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,6 +30,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 public class AppointmentDetailView extends Stage {
 
@@ -121,6 +127,31 @@ public class AppointmentDetailView extends Stage {
 		// add scene
 		stage.setScene(scene);
 
+		// animation
+		final Timeline timeline = new Timeline();
+		timeline.setCycleCount(1);
+		timeline.setAutoReverse(true);
+		DoubleProperty stageWidth = new SimpleDoubleProperty();
+		stageWidth.addListener((observable, oldValue, newValue) -> {
+			if (newValue != null && newValue.doubleValue() != Double.NaN) {
+				stage.setWidth(newValue.doubleValue());
+			}
+		});
+		DoubleProperty stageHeight = new SimpleDoubleProperty();
+		stageHeight.addListener((observable, oldValue, newValue) -> {
+			if (newValue != null && newValue.doubleValue() != Double.NaN) {
+				stage.setHeight(newValue.doubleValue());
+			}
+		});
+		
+		final KeyValue kv = new KeyValue(stageHeight, 500);
+		final KeyValue kv2 = new KeyValue(stageWidth, 400);
+		final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
+		final KeyFrame kf2 = new KeyFrame(Duration.millis(500), kv2);
+		timeline.getKeyFrames().addAll(kf, kf2);
+		timeline.play();
+
+		
 		// display
 		stage.showAndWait();
 	}

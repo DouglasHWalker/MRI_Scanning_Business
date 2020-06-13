@@ -40,13 +40,11 @@ public class AppointmentDB {
 			Calendar endCal = Calendar.getInstance();
 			endCal.setTimeInMillis(appointment.getEndTime());
 
-			System.out.println(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(startCal.getTimeInMillis()));
 			if (startCal.get(Calendar.YEAR) == activeDate.get(Calendar.YEAR)
 					&& startCal.get(Calendar.MONTH) == activeDate.get(Calendar.MONTH)
 					&& startCal.get(Calendar.DAY_OF_MONTH) >= startDate
 					&& startCal.get(Calendar.DAY_OF_MONTH) <= endDate) {
 				appList.add(appointment);
-				System.out.println(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(startCal.getTimeInMillis()));
 			}
 		}
 
