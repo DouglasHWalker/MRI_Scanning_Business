@@ -170,7 +170,7 @@ public class MonthView extends GridPane {
 					dateSelected = Integer.parseInt(((Label) e.getSource()).getText());
 					monthLbl.setText(String.valueOf(dateSelected));
 				} catch (Exception e2) {
-					
+					e2.getMessage();
 				}
 
 			}

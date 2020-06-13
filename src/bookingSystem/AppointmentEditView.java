@@ -1,4 +1,3 @@
-
 package bookingSystem;
 
 import java.text.ParseException;
@@ -36,22 +35,98 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-public class AppointmentEditDetailView extends AppointmentEditView {
+public class AppointmentEditView extends Stage {
 
-	public AppointmentEditDetailView(double positionX, double positionY, Appointment appointment) {
-		super();
-		this.appointment = appointment;
+	// global instance variables
+	protected double offsetX;
+	protected double offsetY;
+
+	protected static final ObservableList<String> TIMES = FXCollections.observableArrayList("7am", "8am", "9am", "10am",
+			"11am", "Noon", "1pm", "2pm", "3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm");
+
+	// Foundation components
+	protected Stage stage;
+	protected Appointment appointment;
+	protected Scene scene;
+
+	// Components
+	protected VBox content;
+	// TITLE
+	protected HBox titleAndExit;
+	protected TextField title;
+	protected Button exitBtn;
+	// DATE
+	protected HBox dateTitle;
+	protected Label dateTitleLbl;
+	protected HBox datePicker;
+	protected TextField date;
+	protected ImageView dateImage;
+	// TIME
+	protected HBox timeTitle;
+	protected Label startTitle;
+	protected Label endTitle;
+	protected HBox timeField;
+	protected ComboBox startTime;
+	protected ComboBox endTime;
+	// COMMENT
+	protected HBox commentTitle;
+	protected Label commentTitleLbl;
+	protected HBox commentField;
+	protected TextArea commentsLbl;
+	// EDIT
+	protected HBox editBar;
+	protected Button saveBtn;
+	// DATEPICKER
+	protected MonthView monthView = new MonthView(Calendar.getInstance(), null);
+
+	// Style CONSTANTS
+	protected static final Insets PADDING = new Insets(32);
+	protected static final Insets LBL_PADDING = new Insets(12, 0, 8, 0);
+	protected static final int MAX_WIDTH = 500;
+	protected static final int MIN_WIDTH = 400;
+	// fonts
+	protected static final Font SMALL_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 14);
+	protected static final Font MAIN_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 16);
+	protected static final Font MEDIUM_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 18);
+	protected static final Font LARGE_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 21);
+	protected static final Font EDIT_BTN_FONT = Font.loadFont("file:src/fonts/segoeuib.ttf", 14);
+
+	protected static final Color TEXT_CLR = Color.rgb(11, 10, 9);
+	protected static final Color INDICATOR_CLR = Color.rgb(35, 91, 170);
+	protected static final Color ALT_TEXT_CLR = Color.rgb(249, 246, 246);
+	protected static final Color TIME_TEXT_CLR = Color.rgb(120, 120, 120);
+	protected static final Color BORDER_CLR = Color.rgb(211, 211, 211);
+
+	protected static final String CLINIC_WHITE = "-fx-background-color: rgb(255,255,255)";
+	protected static final String BLACK_BLIGHT = "-fx-background-color: rgb(11,10,9)";
+	protected static final String CLASSIC_SCRUB_BLUE = "-fx-background-color: rgb(35,91,170)";
+
+	protected static final String BTN_BORDER = "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
+			+ "-fx-border-radius: 8;" + "-fx-border-color: rgb(211, 211, 211)";
+	protected static final String EVENT_BORDER = "-fx-border-style: solid inside;" + "-fx-border-width: 1;"
+			+ "-fx-border-color: rgb(211, 211, 211)";
+
+	public AppointmentEditView() {
+
+		this.appointment = new Appointment();
+		
+		// STAGE
+		stage = new Stage();
 		// set position
-		stage.setX(positionX);
-		stage.setY(positionY);
+		stage.centerOnScreen();
 		// set icon
+		stage.getIcons().add(new Image("images/image.png"));
 		stage.setTitle(appointment.getTitle());
 
 		// SCENE
 		scene = initScene();
+
 		setComponentStyles();
 		initComponentEvents();
 
+		// STAGE
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.initStyle(StageStyle.UNDECORATED);
 		// Shadow
 		content.setBackground(new Background(new BackgroundFill(Color.WHITE, null, new Insets(6, 12, 12, 6))));
 		stage.initStyle(StageStyle.TRANSPARENT);
@@ -61,19 +136,16 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 
 		// add scene
 		stage.setScene(scene);
-		// display
-		stage.showAndWait();
 	}
 
 	private Scene initScene() {
 
-		content.getChildren().clear();
-
+		content = new VBox();
 		content = new VBox();
 
 		// TITLE
 		titleAndExit = new HBox();
-		title = new TextField(appointment.getTitle());
+		title = new TextField("example: John Doe");
 		exitBtn = new Button();
 		exitBtn.setGraphic(new ImageView(new Image("images/cancelBlack.png", 32, 32, true, false)));
 		titleAndExit.getChildren().addAll(title, createSpacer(), exitBtn);
@@ -83,7 +155,7 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 		dateTitleLbl = new Label("Date");
 		dateTitle.getChildren().add(dateTitleLbl);
 		datePicker = new HBox();
-		date = new TextField(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date(appointment.getStartTime())));
+		date = new TextField(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date()));
 		date.setEditable(false);
 		dateImage = new ImageView(new Image("images/dropdown.png"));
 		datePicker.getChildren().addAll(date, dateImage);
@@ -105,7 +177,7 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 		commentTitleLbl = new Label("Comments");
 		commentTitle.getChildren().add(commentTitleLbl);
 		commentField = new HBox();
-		commentsLbl = new TextArea(appointment.getDescription());
+		commentsLbl = new TextArea("");
 		commentField.getChildren().add(commentsLbl);
 
 		// EDIT
@@ -145,7 +217,6 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 //			dateField;
 		date.setFont(MAIN_FONT);
 		date.setMinWidth(250);
-		date.setPromptText(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date(appointment.getEndTime())));
 		// date picker
 		datePicker.setAlignment(Pos.CENTER_LEFT);
 		datePicker.setSpacing(8);
@@ -175,6 +246,7 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 //			commentField;
 		commentsLbl.setFont(SMALL_FONT);
 		commentsLbl.setWrapText(true);
+		commentsLbl.setPromptText("Note any comments here");
 //			// EDIT
 //			editBar;
 //			editBtn;
@@ -197,35 +269,65 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 		EventHandler<ActionEvent> saveButton = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
+				
+				// title
+				String name = title.getText();
+			
 				// end time
-				int time = calcTime((String) endTime.getValue());
+				int  time = calcTime((String) endTime.getValue());
 				monthView.getActiveMonth().set(Calendar.HOUR_OF_DAY, time);
-				monthView.getActiveMonth().set(Calendar.MINUTE,
-						monthView.getActiveMonth().getActualMinimum(Calendar.MINUTE));
 				long endT = monthView.getActiveMonth().getTimeInMillis();
 				// start time
 				time = calcTime((String) startTime.getValue());
 				monthView.getActiveMonth().set(Calendar.HOUR_OF_DAY, time);
-				monthView.getActiveMonth().set(Calendar.MINUTE,
-						monthView.getActiveMonth().getActualMinimum(Calendar.MINUTE));
-				// date
 				appointment.setStartTime(monthView.getActiveMonth().getTimeInMillis());
-				
-				long startT = monthView.getActiveMonth().getTimeInMillis();
-
-				// title
-				appointment.setTitle(title.getText());
-
-				// end time
-				appointment.setEndTime(endT);
-				// start time
-				appointment.setStartTime(startT);
-
 				// comments
-				appointment.setDescription(commentsLbl.getText());
-				appointment.setStartTime(monthView.getActiveMonth().getTimeInMillis());
+				String description = commentsLbl.getText();
+				long startT = monthView.getActiveMonth().getTimeInMillis();
+				
+				appointment = new Appointment(startT, endT, name, description, name);
 				// close stage
 				stage.close();
+			}
+
+			private int calcTime(String value) {
+
+				switch (value) {
+				case "7am":
+					return 7;
+				case "8am":
+					return 8;
+				case "9am":
+					return 9;
+				case "10am":
+					return 10;
+				case "11am":
+					return 11;
+				case "Noon":
+					return 12;
+				case "1pm":
+					return 13;
+				case "2pm":
+					return 14;
+				case "3pm":
+					return 15;
+				case "4pm":
+					return 16;
+				case "5pm":
+					return 17;
+				case "6pm":
+					return 18;
+				case "7pm":
+					return 19;
+				case "8pm":
+					return 20;
+				case "9pm":
+					return 21;
+				case "10pm":
+					return 22;
+				default:
+					return 0;
+				}
 			}
 
 		};
@@ -322,45 +424,37 @@ public class AppointmentEditDetailView extends AppointmentEditView {
 
 		content.setOnMousePressed(buttonAreaMousePress);
 		content.setOnMouseDragged(buttonAreaDrag);
-	}
-	
-	private int calcTime(String value) {
 
-		switch (value) {
-		case "7am":
-			return 7;
-		case "8am":
-			return 8;
-		case "9am":
-			return 9;
-		case "10am":
-			return 10;
-		case "11am":
-			return 11;
-		case "Noon":
-			return 12;
-		case "1pm":
-			return 13;
-		case "2pm":
-			return 14;
-		case "3pm":
-			return 15;
-		case "4pm":
-			return 16;
-		case "5pm":
-			return 17;
-		case "6pm":
-			return 18;
-		case "7pm":
-			return 19;
-		case "8pm":
-			return 20;
-		case "9pm":
-			return 21;
-		case "10pm":
-			return 22;
-		default:
-			return 12;
-		}
 	}
+
+	protected Node createSpacer() {
+		final Region spacer = new Region();
+		HBox.setHgrow(spacer, Priority.ALWAYS);
+		return spacer;
+	}
+
+	public Appointment getAppointment() {
+		return this.appointment;
+	}
+
+	public String getTitleText() {
+		return this.title.getText();
+	}
+
+	public String getDateText() {
+		return this.date.getText();
+	}
+
+	public String getStartTimeValue() {
+		return (String) this.startTime.getValue();
+	}
+
+	public String getEndTimeValue() {
+		return (String) this.endTime.getValue();
+	}
+
+	public String getCommentsText() {
+		return commentsLbl.getText();
+	}
+
 }

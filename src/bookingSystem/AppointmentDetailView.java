@@ -297,7 +297,7 @@ public class AppointmentDetailView extends Stage {
 		title.setText(appointment.getTitle());
 
 		// DATE
-		date.setText(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date(appointment.getStartTime())));
+		date.setText(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(new Date(appointment.getEndTime())));
 
 		// TIME
 		startTime.setText(new SimpleDateFormat("hh:mm a").format(new Date(appointment.getStartTime())));

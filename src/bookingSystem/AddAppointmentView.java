@@ -1,0 +1,16 @@
+package bookingSystem;
+
+public class AddAppointmentView extends AppointmentEditView {
+
+	public AddAppointmentView() {
+		super();
+
+		// display
+		stage.showAndWait();
+	}
+
+	public Appointment getAppointment() {
+		return this.appointment;
+	}
+
+}

@@ -1,12 +1,16 @@
 package bookingSystem;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.embed.swt.FXCanvas;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -18,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -64,10 +69,15 @@ public class CalendarView extends BorderPane {
 	// instance variables
 	private Calendar activeDate;
 	private int firstDayInView;
+	private long firstSecondInView;
 	private Date date = new Date();
+	private AppointmentDB appointmentDB = new AppointmentDB();
 	private ObservableList<Appointment> appointments;
+	private ObservableList<Appointment> appointmentCells;
+
 	private static final String[] TIMES = new String[] { "7am", "8am", "9am", "10am", "11am", "Noon", "1pm", "2pm",
 			"3pm", "4pm", "5pm", "6pm", "7pm", "8pm", "9pm", "10pm", };
+	private static final int VIEW_RANGE = 7;
 
 	// components
 	private BorderPane header;
@@ -101,27 +111,76 @@ public class CalendarView extends BorderPane {
 		super();
 		this.activeDate = date;
 
+		int currentDateWeekPos = activeDate.get(Calendar.DAY_OF_WEEK);
+		this.firstDayInView = activeDate.get(Calendar.DATE) - (currentDateWeekPos - 1);
+		
+		
+
 		initializeComponents();
 		setComponentStyles();
 		setUpComponentEvents();
 	}
 
-	private void initializeComponents() {
+	private void initAppointmentCells() {
+		ArrayList<Appointment> appointmentsArray = new ArrayList<Appointment>();
+		appointmentCells = FXCollections.observableArrayList(appointmentsArray);
 
-		this.setStyle(CLINIC_WHITE);
-
-		// get appointments for current range (default is 7 for week)
-		int currentDateWeekPos = activeDate.get(Calendar.DAY_OF_WEEK);
-		this.firstDayInView = activeDate.get(Calendar.DATE) - (currentDateWeekPos - 1);
-		appointments = new Appointment().getAppointments(firstDayInView, 7);
-
-		// TODO: clean code
-		appointments.addListener(new ListChangeListener<Appointment>() {
+		for (int timeRow = 0; timeRow < VIEW_RANGE; timeRow++) {
+			// for each time
+			for (int dayCol = 0; dayCol < TIMES.length; dayCol++) {
+				// for each day
+				appointmentCells.add(new Appointment());
+			}
+		}
+		appointmentCells.addListener(new ListChangeListener<Appointment>() {
 			@Override
 			public void onChanged(Change change) {
 				change.next();
 			}
 		});
+	}
+
+	private void updateAppointmentCells() {
+		System.out.println(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(activeDate.getTimeInMillis()));
+		appointments = appointmentDB.getAppointmentsInRange(activeDate, firstDayInView, VIEW_RANGE);
+		
+		for (Appointment appointment : appointments) {
+			// calc index and set that appointment cell index to appointment
+			appointmentCells.set(calcIndex(appointment, firstDayInView), appointment);
+			
+		}
+		
+		addAppointmentEventFilter();
+	}
+
+	private void addAppointmentEventFilter() {
+		EventHandler<MouseEvent> eventDetailClick = new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				Appointment oldApp = (Appointment) e.getSource();
+				AppointmentDetailView detailView = new AppointmentDetailView(e.getScreenX(), e.getScreenY(), oldApp);
+				Appointment newAppointment = detailView.getAppointment();
+				newAppointment.setInfoLblText(newAppointment.getTitle() + "\n" + newAppointment.getDescription());
+				appointments.set(appointments.indexOf(oldApp), newAppointment);
+				refresh();
+			}
+		};
+		
+		for (Appointment app: appointments) {
+			app.setOnMouseClicked(eventDetailClick);
+		}
+	}
+	
+	private void initializeComponents() {
+
+		
+		
+		int currentDateWeekPos = activeDate.get(Calendar.DAY_OF_WEEK);
+		this.firstDayInView = activeDate.get(Calendar.DATE) - (currentDateWeekPos - 1);
+
+		initAppointmentCells();
+		updateAppointmentCells();
+		
+		this.setStyle(CLINIC_WHITE);
 
 		initHeader();
 		initEventSpace();
@@ -197,7 +256,7 @@ public class CalendarView extends BorderPane {
 		// column constraints
 		ColumnConstraints col1 = new ColumnConstraints();
 		dateRow.getColumnConstraints().add(col1);
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < VIEW_RANGE; i++) {
 			ColumnConstraints col = new ColumnConstraints();
 			col.setHgrow(Priority.ALWAYS);
 			dateRow.getColumnConstraints().add(col);
@@ -272,7 +331,7 @@ public class CalendarView extends BorderPane {
 		int currentDatePos = activeDate.get(Calendar.DAY_OF_WEEK);
 		tempCal.set(Calendar.DATE, activeDate.get(Calendar.DATE) - (currentDatePos - 1));
 		// for every day in the week
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < VIEW_RANGE; i++) {
 			updateDateLbl(tempCal.get(Calendar.DATE) + "");
 			// if current day
 			if (isCurrentDate(tempCal)) {
@@ -337,14 +396,14 @@ public class CalendarView extends BorderPane {
 		// for each time
 		for (int timeRow = 0; timeRow < TIMES.length; timeRow++) {
 			// for each day
-			for (int dayCol = 0; dayCol < 7; dayCol++) {
+			for (int dayCol = 0; dayCol < VIEW_RANGE; dayCol++) {
 
-				eventCell = appointments.get(appointCount);
+				eventCell = appointmentCells.get(appointCount);
 				appointCount++;
 				eventGrid.add(eventCell, dayCol, timeRow);
 				addEventGridBorder(dayCol, timeRow);
 
-				if (colCount < 7) {
+				if (colCount < VIEW_RANGE) {
 					ColumnConstraints col = new ColumnConstraints();
 					col.setHgrow(Priority.NEVER);
 					col.setPercentWidth(100);
@@ -414,6 +473,7 @@ public class CalendarView extends BorderPane {
 			@Override
 			public void handle(ActionEvent e) {
 				activeDate.add(Calendar.WEEK_OF_YEAR, 1);
+				appointmentDB.initAppointments();
 				refresh();
 			}
 		};
@@ -423,6 +483,7 @@ public class CalendarView extends BorderPane {
 			@Override
 			public void handle(ActionEvent e) {
 				activeDate.add(Calendar.WEEK_OF_YEAR, -1);
+				appointmentDB.initAppointments();
 				refresh();
 			}
 		};
@@ -432,6 +493,24 @@ public class CalendarView extends BorderPane {
 			@Override
 			public void handle(ActionEvent e) {
 				activeDate = Calendar.getInstance();
+				appointmentDB.initAppointments();
+				refresh();
+			}
+		};
+
+		// today navigation button
+		EventHandler<ActionEvent> onAddBtnClick = new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				AddAppointmentView addView = new AddAppointmentView();
+				Appointment newAppointment = addView.getAppointment();
+
+				newAppointment.setInfoLblText(newAppointment.getTitle() + "\n" + newAppointment.getDescription());
+				// calculate appointment index
+				appointmentDB.addAppointment(newAppointment);
+				System.out.println(new SimpleDateFormat("EEEE, dd MMMM YYYY").format(activeDate.getTimeInMillis()));
+				updateAppointmentCells();
+
 				refresh();
 			}
 		};
@@ -439,6 +518,26 @@ public class CalendarView extends BorderPane {
 		nextBtn.setOnAction(onNextMonthBtnClick);
 		prevBtn.setOnAction(onPrevMonthBtnClick);
 		todayBtn.setOnAction(onTodayBtnClick);
+		addBtn.setOnAction(onAddBtnClick);
+	}
+
+	public int calcIndex(Appointment appointment, int startDate) {
+
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTimeInMillis(appointment.getStartTime());
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTimeInMillis(appointment.getEndTime());
+
+		int row = startCal.get(Calendar.HOUR_OF_DAY) - VIEW_RANGE;
+		int col = startCal.get(Calendar.DATE) - startDate;
+
+		int index = (row * VIEW_RANGE) + col;
+
+		if (index < 0 || index > (7 * TIMES.length)) {
+			return 0;
+		}
+
+		return index;
 	}
 
 	// Getters and Setter
