@@ -134,6 +134,32 @@ public class PatientDetails {
 		EventHandler<ActionEvent> backBtnClick = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
+									int sizeXCast = (int)sizeX;
+					int sizeYCast = (int)sizeY;
+					
+					WritableImage wi = new WritableImage(sizeXCast, sizeYCast);
+					Image img1 = content.snapshot(new SnapshotParameters(), wi);
+					ImageView imgView1 = new ImageView(img1);
+					wi = new WritableImage(sizeXCast, sizeYCast);
+					
+					Image img2 = PatientRecordsScene.content.snapshot(new SnapshotParameters(), wi);
+					ImageView imgView2 = new ImageView(img2);
+					
+					imgView2.setTranslateX(0);
+					imgView1.setTranslateX(sizeXCast);
+					StackPane stackPane = new StackPane(imgView2, imgView1);
+					stackPane.setPrefSize(sizeXCast, sizeYCast);
+					PatientRecordsScene.content.getChildrean.setAll(stackPane);
+					
+					Timeline timeLine = new Timeline();
+					KeyValue kv = new KeyValue(imgView1.translateXProperty(), 0, Interpolator.EASE_BOTH);
+					KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
+					timeLine.getKeyFrames().add(kf);
+					timeLine.setOnFinished(t -> {
+						content.getChildren().setAll(error);
+						stage.setScene(PatientRecordsScene);
+					});
+					timeLine.play();
 				scene = new PatientRecordsScene(stage, scene.getWidth(), scene.getHeight()).getScene();
 				stage.setScene(scene);
 			}
