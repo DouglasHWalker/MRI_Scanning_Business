@@ -11,6 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
+/*
+ * author: DouglasHudsonWalker huddy007 - June 2020
+ */
 public class Appointment extends BorderPane {
 
 	public ObservableList<Appointment> appointments;

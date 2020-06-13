@@ -19,6 +19,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 
+/*
+ * author: DouglasHudsonWalker huddy007 - June 2020
+ */
 public class MonthView extends GridPane {
 
 	private Calendar activeMonth = Calendar.getInstance();

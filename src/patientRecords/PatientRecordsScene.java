@@ -37,7 +37,9 @@ import javafx.util.Duration;
 import mainView.MainViewScene;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-
+/*
+ * author: DanikaKing kinde001 - June 2020
+ */
 public class PatientRecordsScene {
 	// component/node variables
 	private Stage stage;

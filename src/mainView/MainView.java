@@ -4,7 +4,10 @@ import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
+/*
+ * author: DouglasHudsonWalker huddy007 - June 2020
+ * author: DanikaKing kinde001 - June 2020
+ */
 public class MainView extends Application {
 
 	private MainViewStage mainWindow;

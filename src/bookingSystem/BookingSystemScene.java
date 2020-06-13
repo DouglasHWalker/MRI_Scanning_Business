@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import mainView.MainViewScene;
 
+/*
+ * author: DouglasHudsonWalker huddy007 - June 2020
+ */
 public class BookingSystemScene {
 
 	private Stage stage;

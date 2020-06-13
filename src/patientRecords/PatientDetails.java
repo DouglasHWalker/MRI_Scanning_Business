@@ -14,7 +14,9 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
+/*
+ * author: DanikaKing kinde001 - June 2020
+ */
 public class PatientDetails {
 	// component/node variables
 	private Stage stage;

@@ -18,7 +18,10 @@ import javafx.stage.Stage;
 import machineOperation.MachineOperationScene;
 import patientRecords.PatientRecordsScene;
 import scanDataManagement.ScanDataScene;
-
+/*
+ * author: DouglasHudsonWalker huddy007 - June 2020
+ * author: DanikaKing kinde001 - June 2020
+ */
 public class MainViewScene {
 
 	// component/node variables

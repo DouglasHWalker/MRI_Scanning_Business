@@ -32,6 +32,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+/*
+ * author: DouglasHudsonWalker huddy007 - June 2020
+ */
 public class AppointmentDetailView extends Stage {
 
 	// global instance variables

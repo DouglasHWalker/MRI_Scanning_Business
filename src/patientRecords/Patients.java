@@ -2,7 +2,9 @@ package patientRecords;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Button;
-
+/*
+ * author: DanikaKing kinde001 - June 2020
+ */
 public class Patients {
 
 	private final SimpleStringProperty fullName, age, gender, height, weight, doLV, doNV, phone, address;

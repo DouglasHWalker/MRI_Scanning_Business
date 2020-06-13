@@ -45,6 +45,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+/*
+ * author: DouglasHudsonWalker huddy007 - June 2020
+ */
 public class CalendarView extends BorderPane {
 
 	// Styling constants

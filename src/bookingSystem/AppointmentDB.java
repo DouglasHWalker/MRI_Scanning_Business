@@ -9,6 +9,9 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 
+/*
+ * author: DouglasHudsonWalker huddy007 - June 2020
+ */
 public class AppointmentDB {
 
 	public ArrayList<Appointment> appointments;

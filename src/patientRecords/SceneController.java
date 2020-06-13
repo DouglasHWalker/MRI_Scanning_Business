@@ -13,7 +13,9 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
-
+/*
+ * author: DanikaKing kinde001 - June 2020
+ */
 public class SceneController {
 
 	private AnchorPane anchorRoot;
