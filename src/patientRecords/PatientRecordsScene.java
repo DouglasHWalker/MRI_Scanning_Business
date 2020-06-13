@@ -254,29 +254,34 @@ public class PatientRecordsScene {
 			@Override
 			public void onChanged(Change<? extends Patients> change) {
 
-				// Animation commented out due to NullPointerException
-
-				// FXMLLoader loader = new
-				// FXMLLoader(getClass().getResource("/SceneController.java"));
-
-				/*
-				 * try { Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(
-				 * "/patientRecords/PatientDetails")); Scene scene = anchorRoot.getScene();
-				 * 
-				 * root.translateYProperty().set(scene.getHeight());
-				 * parentContainer.getChildren().add(root);
-				 * 
-				 * Timeline timeLine = new Timeline();
-				 * 
-				 * KeyValue kv = new KeyValue(root.translateYProperty(), 0,
-				 * Interpolator.EASE_IN); KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
-				 * timeLine.getKeyFrames().add(kf);
-				 * 
-				 * timeLine.setOnFinished(t -> {
-				 * parentContainer.getChildren().remove(anchorRoot); }); timeLine.play(); }
-				 * catch (IOException e) { // TODO Auto-generated catch block
-				 * e.printStackTrace(); }
-				 */
+				int sizeXCast = (int)sizeX;
+				int sizeYCast = (int)sizeY;
+				PatientDetails pD = new PatientDetails(stage, sizeXCast, sizeYCast);
+				
+				WritableImage wi = new WritableImage(sizeXCast, sizeYCast);
+				Image img1 = content.snapshot(new SnapshotParameters(), wi);
+				ImageView imgView1 = new ImageView(img1);
+				wi = new WritableImage(sizeXCast, sizeYCast);
+				
+				Image img2 = pD.snapshot(new SnapshotParameters(), wi);
+				ImageView imgView2 = new ImageView(img2);
+				
+				imgView1.setTranslateX(0);
+				imgView2.setTranslateX(sizeXCast);
+				StackPane stackPane = new StackPane(imgView1, imgView2);
+				stackPane.setPrefSize(sizeXCast, sizeYCast);
+				
+				content.getChildren().setAll(stackPane);
+				
+				Timeline timeLine = new Timeline();
+				KeyValue kv = new KeyValue(imgView2.translateXProperty(), 0, Interpolator.EASE_BOTH);
+				KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
+				timeLine.getKeyFrames().add(kf);
+				timeLine.setOnFinished(e ->{
+					content.getChildren().setAll(error);
+					stage.setScene(PatientDetails);
+				});
+				timeLine.play();
 
 				// Set new scene
 				scene = new PatientDetails(stage, scene.getWidth(), scene.getHeight()).getScene();
