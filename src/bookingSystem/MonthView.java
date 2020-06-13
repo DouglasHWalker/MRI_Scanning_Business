@@ -188,7 +188,7 @@ public class MonthView extends GridPane {
 				dayLbl.setOnMouseClicked(filter);
 			}
 		} catch (Exception e) {
-			
+
 		}
 
 	}

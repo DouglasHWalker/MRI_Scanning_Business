@@ -85,7 +85,6 @@ public class Appointment extends BorderPane {
 		this.description = description;
 	}
 
-
 	public void setInfoLblText(String string) {
 		this.infoLbl.setText(string);
 	}

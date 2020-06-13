@@ -18,24 +18,24 @@ public class SceneController {
 
 	private AnchorPane anchorRoot;
 	private StackPane parentContainer;
-	
+
 	public void loadSecondScene() throws IOException {
-		
+
 		Parent root = FXMLLoader.load(getClass().getResource("PatientDetails.java"));
 		Scene scene = anchorRoot.getScene();
-		
+
 		root.translateYProperty().set(scene.getHeight());
 		parentContainer.getChildren().add(root);
-		
+
 		Timeline timeLine = new Timeline();
-		
+
 		KeyValue kv = new KeyValue(root.translateYProperty(), 0, Interpolator.EASE_IN);
 		KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
 		timeLine.getKeyFrames().add(kf);
-		
+
 		timeLine.setOnFinished(t -> {
 			parentContainer.getChildren().remove(anchorRoot);
-			});
+		});
 		timeLine.play();
 	}
 }

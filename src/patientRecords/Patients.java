@@ -1,26 +1,26 @@
 package patientRecords;
 
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Button;
 
 public class Patients {
-	
+
 	private final SimpleStringProperty fullName, age, gender, height, weight, doLV, doNV, phone, address;
 	Button button = new Button();
-	
-	Patients (String fullName, String age, String gender, String height, String weight, String doLV,
-		String doNV, String phone, String address) {
-		this.fullName = new SimpleStringProperty (fullName);
-		this.age = new SimpleStringProperty (age);
-		this.gender = new SimpleStringProperty (gender);
-		this.height = new SimpleStringProperty (height);
-		this.weight = new SimpleStringProperty (weight);
-		this.doLV = new SimpleStringProperty (doLV);
-		this.doNV = new SimpleStringProperty (doNV);
-		this.phone = new SimpleStringProperty (phone);
-		this.address = new SimpleStringProperty (address);
+
+	Patients(String fullName, String age, String gender, String height, String weight, String doLV, String doNV,
+			String phone, String address) {
+		this.fullName = new SimpleStringProperty(fullName);
+		this.age = new SimpleStringProperty(age);
+		this.gender = new SimpleStringProperty(gender);
+		this.height = new SimpleStringProperty(height);
+		this.weight = new SimpleStringProperty(weight);
+		this.doLV = new SimpleStringProperty(doLV);
+		this.doNV = new SimpleStringProperty(doNV);
+		this.phone = new SimpleStringProperty(phone);
+		this.address = new SimpleStringProperty(address);
 	}
+
 	/**
 	 * @return the fullName
 	 */
@@ -146,11 +146,11 @@ public class Patients {
 	public void setAddress(String streetAddress) {
 		address.set(streetAddress);
 	}
-	
+
 	public void setButton(Button button) {
 		this.button = button;
 	}
-	
+
 	public Button getButton() {
 		return button;
 	}

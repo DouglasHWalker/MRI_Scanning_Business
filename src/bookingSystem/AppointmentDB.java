@@ -267,7 +267,7 @@ public class AppointmentDB {
 				"John Williams");
 
 		appointments.add(appointment);
-		
+
 		// Tuesday,last week
 		startTimeCal.set(Calendar.DAY_OF_WEEK, 3);
 		endTimeCal.set(Calendar.DAY_OF_WEEK, 3);
@@ -511,7 +511,7 @@ public class AppointmentDB {
 
 		startTimeCal.set(Calendar.HOUR_OF_DAY, 9);
 		endTimeCal.set(Calendar.HOUR_OF_DAY, 10);
-		
+
 		appointment = new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(), "Margaret Hamilton",
 				"Sports Injury, ankle lower lateral ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut \r\n"
 						+ "labore et dolore magna aliqua.",
@@ -523,7 +523,6 @@ public class AppointmentDB {
 		appointment = new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(), "Herbert Simon",
 				"Skipping induced list injury. Omega test required ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
 				"Herbert Simon");
-	
 
 		appointments.add(appointment);
 
@@ -569,7 +568,6 @@ public class AppointmentDB {
 				"Edward McCreight");
 
 		appointments.add(appointment);
-
 
 	}
 }

@@ -43,7 +43,7 @@ public class BookingSystemScene {
 		this.monthView = new MonthView(Calendar.getInstance(), new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				buttonAnimation((Label)e.getSource());
+				buttonAnimation((Label) e.getSource());
 				Calendar newDate = monthView.getActiveMonth();
 				newDate.set(Calendar.DAY_OF_MONTH, Integer.parseInt(((Label) e.getSource()).getText()));
 				calendarView.setActiveMonth(newDate);
@@ -68,11 +68,10 @@ public class BookingSystemScene {
 //		toolBar.add(filterList, 0, 2);
 		BorderPane btnPane = new BorderPane();
 		btnPane.setPadding(new Insets(8));
-		
+
 		backBtn = new Button("Back");
 		btnPane.setTop(toolBar);
 		btnPane.setBottom(backBtn);
-		
 
 		// content layout and styles calendar
 		content = new BorderPane();
@@ -108,7 +107,7 @@ public class BookingSystemScene {
 	public Scene getScene() {
 		return this.scene;
 	}
-	
+
 	public void buttonAnimation(Node node) {
 		FadeTransition ft = new FadeTransition(Duration.millis(300), node);
 		ft.setFromValue(1.0);

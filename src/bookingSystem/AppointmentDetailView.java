@@ -143,7 +143,7 @@ public class AppointmentDetailView extends Stage {
 				stage.setHeight(newValue.doubleValue());
 			}
 		});
-		
+
 		final KeyValue kv = new KeyValue(stageHeight, 500);
 		final KeyValue kv2 = new KeyValue(stageWidth, 400);
 		final KeyFrame kf = new KeyFrame(Duration.millis(500), kv);
@@ -151,7 +151,6 @@ public class AppointmentDetailView extends Stage {
 		timeline.getKeyFrames().addAll(kf, kf2);
 		timeline.play();
 
-		
 		// display
 		stage.showAndWait();
 	}
