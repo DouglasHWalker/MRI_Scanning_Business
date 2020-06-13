@@ -28,8 +28,8 @@ public class BookingSystemScene {
 	// components
 	private GridPane toolBar;
 	private MonthView monthView;
-	private MonthView calendarList = new MonthView(Calendar.getInstance(), null);
-	private MonthView filterList = new MonthView(Calendar.getInstance(), null);
+//	private MonthView calendarList = new MonthView(Calendar.getInstance(), null);
+//	private MonthView filterList = new MonthView(Calendar.getInstance(), null);
 	private CalendarView calendarView = new CalendarView(Calendar.getInstance());
 
 	private Button backBtn;
@@ -62,19 +62,24 @@ public class BookingSystemScene {
 
 		// Contents
 		toolBar = new GridPane();
-		toolBar.setPadding(new Insets(50, 16, 0, 16));
+		toolBar.setPadding(new Insets(50, 16, 0, 8));
 		toolBar.add(monthView, 0, 0);
-		toolBar.add(calendarList, 0, 1);
-		toolBar.add(filterList, 0, 2);
+//		toolBar.add(calendarList, 0, 1);
+//		toolBar.add(filterList, 0, 2);
+		BorderPane btnPane = new BorderPane();
+		btnPane.setPadding(new Insets(8));
+		
 		backBtn = new Button("Back");
+		btnPane.setTop(toolBar);
+		btnPane.setBottom(backBtn);
+		
 
 		// content layout and styles calendar
 		content = new BorderPane();
 		content.setStyle("-fx-background-color: rgb(255,255,255)");
 		// component positioning
-		content.setLeft(toolBar);
+		content.setLeft(btnPane);
 		content.setCenter(calendarView);
-		content.setBottom(backBtn);
 
 		// SCENE
 		scene = new Scene(content, width, height);

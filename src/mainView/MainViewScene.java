@@ -30,11 +30,10 @@ public class MainViewScene {
 	ColumnConstraints col1 = new ColumnConstraints();
 	RowConstraints row0 = new RowConstraints();
 	RowConstraints row1 = new RowConstraints();
-	private final int BTN_MIN_WIDTH = 300, BTN_MIN_HEIGHT = 60, BTN_MAX_WIDTH = 1000, BTN_MAX_HEIGHT = 1000,
-			BTN_PREF_WIDTH = 600, BTN_PREF_HEIGHT = 360;
+	private final int BTN_MIN_WIDTH = 300, BTN_MIN_HEIGHT = 60, BTN_MAX_WIDTH = 800, BTN_MAX_HEIGHT = 800,
+			BTN_PREF_WIDTH = 500, BTN_PREF_HEIGHT = 260;
 
 	// components
-	private Label welcomeLbl;
 	private Button bookingBtn;
 	private Button patientsBtn;
 	private Button logOutBtn;
@@ -42,16 +41,15 @@ public class MainViewScene {
 	private Button cancelBtn;
 	private Button startBtn;
 	private Button emergencyBtn;
-	
 
 	// Colors and styling
 	private String background = CLINIC_WHITE;
 	private String foreground = BLACK_BLIGHT;
 	private String accent = POVIDONE_ORANGE;
 	private String btnBackground = CLASSIC_SCRUB_BLUE;
-	private Color btnForeground = Color.rgb(249, 246, 246); 
-	private Color txtForeground = Color.rgb(11,10,9);
-	
+	private Color btnForeground = Color.rgb(249, 246, 246);
+	private Color txtForeground = Color.rgb(11, 10, 9);
+
 	// Colors and Styling CONSTANTS
 	private static final Font MAIN_FONT = Font.loadFont("file:src/fonts/segoeui.ttf", 18);
 	private static final String CLINIC_WHITE = "-fx-background-color: rgb(255,250,250)";
@@ -71,7 +69,6 @@ public class MainViewScene {
 		scene = new Scene(content, width, height);
 	}
 
-	
 	private void setUpComponents() {
 
 		// PANES
@@ -82,10 +79,6 @@ public class MainViewScene {
 		gridPane.setPadding(new Insets(10));
 		gridPane.setAlignment(Pos.CENTER);
 
-		
-		// Title Label
-		welcomeLbl = new Label("Hello Hisoka Kuramoto");
-		welcomeLbl.setAlignment(Pos.CENTER);
 		// BUTTONS
 		bookingBtn = new Button("Book Appointments");
 		bookingBtn.setMinWidth(BTN_MIN_WIDTH);
@@ -136,10 +129,9 @@ public class MainViewScene {
 		emergencyBtn.setPrefHeight(BTN_PREF_HEIGHT);
 		emergencyBtn.setMaxHeight(BTN_MAX_HEIGHT);
 		emergencyBtn.setMaxWidth(BTN_MAX_WIDTH);
-		
+
 		// add components to content
-		gridPane.getChildren().addAll(welcomeLbl, bookingBtn, scanBtn, patientsBtn, logOutBtn);
-		content.setTop(welcomeLbl);
+		gridPane.getChildren().addAll(bookingBtn, scanBtn, patientsBtn, logOutBtn);
 		GridPane.setConstraints(scanBtn, 0, 0);
 		GridPane.setConstraints(bookingBtn, 1, 0);
 		GridPane.setConstraints(logOutBtn, 0, 1);
@@ -151,39 +143,33 @@ public class MainViewScene {
 	}
 
 	private void applyComponentStyles() {
-		// Label
-		welcomeLbl.setFont(MAIN_FONT);;
-		welcomeLbl.setTextFill(txtForeground);
 		// BUTTONS
 		bookingBtn.setStyle(btnBackground);
 		bookingBtn.setFont(MAIN_FONT);
 		bookingBtn.setTextFill(btnForeground);
-		
+
 		patientsBtn.setStyle(btnBackground);
 		patientsBtn.setFont(MAIN_FONT);
 		patientsBtn.setTextFill(btnForeground);
-		
+
 		scanBtn.setStyle(btnBackground);
 		scanBtn.setFont(MAIN_FONT);
 		scanBtn.setTextFill(btnForeground);
-		
+
 		logOutBtn.setStyle(btnBackground);
 		logOutBtn.setFont(MAIN_FONT);
 		logOutBtn.setTextFill(btnForeground);
-		
+
 		cancelBtn.setStyle(btnBackground);
 		cancelBtn.setFont(MAIN_FONT);
 		cancelBtn.setTextFill(btnForeground);
-		
+
 		emergencyBtn.setStyle(btnBackground);
 		emergencyBtn.setFont(MAIN_FONT);
 		emergencyBtn.setTextFill(btnForeground);
-		
-		
-		
+
 	}
 
-	
 	private void setUpEventHandlers() {
 		// Create button click handler
 		EventHandler<ActionEvent> bookingBtnClick = new EventHandler<ActionEvent>() {

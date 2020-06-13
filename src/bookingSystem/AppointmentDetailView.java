@@ -106,7 +106,7 @@ public class AppointmentDetailView extends Stage {
 		stage.setX(positionX);
 		stage.setY(positionY);
 		// set icon
-		stage.getIcons().add(new Image("images/image.png"));
+		stage.getIcons().add(new Image("images/Logo.png"));
 		stage.setTitle(appointment.getTitle());
 
 		// SCENE

@@ -102,17 +102,6 @@ public class AppointmentDB {
 
 		appointments.add(appointment);
 
-		startTimeCal.set(Calendar.HOUR_OF_DAY, 18);
-		endTimeCal.set(Calendar.HOUR_OF_DAY, 19);
-		appointment = new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(), "FRI, LAST",
-				"Patient checkup: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
-						+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
-						+ "nisi ut aliquip ex ea commodo consequat. \r\n"
-						+ "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
-						+ "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-				"Adelson Velsky");
-		appointments.add(appointment);
-
 		// Tuesday,last week
 		startTimeCal.set(Calendar.DAY_OF_WEEK, 3);
 		endTimeCal.set(Calendar.DAY_OF_WEEK, 3);
@@ -278,19 +267,7 @@ public class AppointmentDB {
 				"John Williams");
 
 		appointments.add(appointment);
-
-		startTimeCal.set(Calendar.HOUR_OF_DAY, 18);
-		endTimeCal.set(Calendar.HOUR_OF_DAY, 19);
-		appointment = new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(), "FRI, CURR",
-				"Patient checkup: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
-						+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
-						+ "nisi ut aliquip ex ea commodo consequat. \r\n"
-						+ "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
-						+ "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-				"Adelson Velsky");
-
-		appointments.add(appointment);
-
+		
 		// Tuesday,last week
 		startTimeCal.set(Calendar.DAY_OF_WEEK, 3);
 		endTimeCal.set(Calendar.DAY_OF_WEEK, 3);
@@ -593,17 +570,6 @@ public class AppointmentDB {
 
 		appointments.add(appointment);
 
-		startTimeCal.set(Calendar.HOUR_OF_DAY, 18);
-		endTimeCal.set(Calendar.HOUR_OF_DAY, 19);
-		appointment = new Appointment(startTimeCal.getTimeInMillis(), endTimeCal.getTimeInMillis(), "FRI, NEXT",
-				"Patient checkup: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut "
-						+ "labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris "
-						+ "nisi ut aliquip ex ea commodo consequat. \r\n"
-						+ "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. "
-						+ "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-				"Adelson Velsky");
-
-		appointments.add(appointment);
 
 	}
 }

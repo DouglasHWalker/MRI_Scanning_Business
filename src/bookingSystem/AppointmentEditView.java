@@ -117,7 +117,7 @@ public class AppointmentEditView extends Stage {
 		// set position
 		stage.centerOnScreen();
 		// set icon
-		stage.getIcons().add(new Image("images/image.png"));
+		stage.getIcons().add(new Image("images/Logo.png"));
 		stage.setTitle(appointment.getTitle());
 
 		// SCENE
@@ -147,7 +147,7 @@ public class AppointmentEditView extends Stage {
 
 		// TITLE
 		titleAndExit = new HBox();
-		title = new TextField("example: John Doe");
+		title = new TextField("John Doe");
 		exitBtn = new Button();
 		exitBtn.setGraphic(new ImageView(new Image("images/cancelBlack.png", 32, 32, true, false)));
 		titleAndExit.getChildren().addAll(title, createSpacer(), exitBtn);
@@ -179,7 +179,7 @@ public class AppointmentEditView extends Stage {
 		commentTitleLbl = new Label("Comments");
 		commentTitle.getChildren().add(commentTitleLbl);
 		commentField = new HBox();
-		commentsLbl = new TextArea("");
+		commentsLbl = new TextArea("Patient booking for weekly checkup. These are some example comments.");
 		commentField.getChildren().add(commentsLbl);
 
 		// EDIT

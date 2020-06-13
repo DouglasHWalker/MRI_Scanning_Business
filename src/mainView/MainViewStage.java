@@ -21,7 +21,7 @@ public class MainViewStage {
 		stage.setY(positionY);
 		stage.setMaximized(maximised);
 		// set icon
-		stage.getIcons().add(new Image("images/image.png"));
+		stage.getIcons().add(new Image("images/Logo.png"));
 		stage.setTitle(title);
 		
 		// SCENE
