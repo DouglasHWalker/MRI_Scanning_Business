@@ -16,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
@@ -24,6 +25,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
@@ -37,15 +41,14 @@ import javafx.util.Duration;
 import mainView.MainViewScene;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-/*
- * author: DanikaKing kinde001 - June 2020
- */
+
 public class PatientRecordsScene {
 	// component/node variables
 	private Stage stage;
 	private Scene scene;
 	public TableView<Patients> tableView = new TableView();
 	private ObservableList<Patients> selectedPatients;
+	public BorderPane content = new BorderPane();
 
 	// Colors and styling
 	private String background = CLINIC_WHITE;
@@ -54,9 +57,6 @@ public class PatientRecordsScene {
 	private String btnBackground = CLASSIC_SCRUB_BLUE;
 	private Color btnForeground = Color.rgb(249, 246, 246);
 	private Color txtForeground = Color.rgb(11, 10, 9);
-
-	private AnchorPane anchorRoot;
-	private StackPane parentContainer;
 
 	// Colors and Styling CONSTANTS
 	public static final Font MAIN_FONT_HEADING = Font.loadFont("file:src/fonts/segoeui.ttf", 20);
@@ -74,11 +74,10 @@ public class PatientRecordsScene {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public PatientRecordsScene(Stage stage, double sizeX, double sizeY) {
 		this.stage = stage;
-		// When opened the stage will be maximized
+		//When opened the stage will be maximized
 		stage.setMaximized(true);
 
 		// Contents
-		BorderPane content = new BorderPane();
 		BorderPane btnArea = new BorderPane();
 		BorderPane headerArea = new BorderPane();
 		VBox vbox = new VBox();
@@ -111,7 +110,7 @@ public class PatientRecordsScene {
 		tableView.prefHeightProperty().bind(stage.heightProperty());
 		tableView.prefWidthProperty().bind(stage.widthProperty());
 
-		// ObservableList to hold all patients
+		//ObservableList to hold all patients
 		final ObservableList<Patients> patient = FXCollections.observableArrayList(
 				new Patients("Blair, Amelia", "32", "F", "159", "60", "13/6/2005", "N/A", "0400 000 000",
 						"128 Bundaberg Road, Semaphore"),
@@ -139,7 +138,7 @@ public class PatientRecordsScene {
 						"56 Clancey Street, Sedan"),
 				new Patients("Williams, Jesse", "38", "M", "168", "74", "17/7/2018", "31/7/2020", "0455 555 555",
 						"1000 Old Town Road, Towita"),
-				// Dummy data to make tableView fill up the center of content
+				//Dummy data to make tableView fill up the center of content
 				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
 				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
 				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
@@ -161,7 +160,7 @@ public class PatientRecordsScene {
 				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "),
 				new Patients(" ", " ", " ", " ", " ", " ", " ", " ", " "));
 
-		// Setting the label, size and data for tableView
+		//Setting the label, size and data for tableView
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		TableColumn<Patients, String> fullNameCol = new TableColumn<Patients, String>("Full Name");
 		fullNameCol.setMinWidth(80);
@@ -209,13 +208,13 @@ public class PatientRecordsScene {
 		addressCol.setMaxWidth(400);
 		addressCol.setCellValueFactory(new PropertyValueFactory("address"));
 
-		// Adding all required components to tableView
+		//Adding all required components to tableView
 		tableView.setItems(patient);
 		tableView.getColumns().addAll(fullNameCol, ageCol, genderCol, heightCol, weightCol, doLVCol, doNVCol, numberCol,
 				addressCol);
 		vbox.getChildren().addAll(databaseLabel, tableView);
 
-		// Layout
+		//Layout
 		content.setCenter(vbox);
 		content.setTop(headerArea);
 		headerArea.setLeft(databaseLabel);
@@ -245,7 +244,7 @@ public class PatientRecordsScene {
 		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 		tableView.setItems(sortedData);
 
-		// Selection Model
+		//Selection Model
 		TableViewSelectionModel<Patients> selectionModel = tableView.getSelectionModel();
 		selectionModel.setSelectionMode(SelectionMode.SINGLE);
 		selectedPatients = selectionModel.getSelectedItems();
@@ -253,7 +252,7 @@ public class PatientRecordsScene {
 		selectedPatients.addListener(new ListChangeListener<Patients>() {
 			@Override
 			public void onChanged(Change<? extends Patients> change) {
-				
+
 			    var paneToRemove = content.getChildren();
 			    var paneToAdd = new PatientDetails(stage, scene.getWidth(), scene.getHeight()).content;
 
@@ -267,6 +266,7 @@ public class PatientRecordsScene {
 			    	content.getChildren().remove(paneToRemove);
 			    });
 			    timeline.play();
+
 			}
 		});
 

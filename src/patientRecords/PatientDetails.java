@@ -1,26 +1,35 @@
 package patientRecords;
 
 import bookingSystem.BookingSystemScene;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-/*
- * author: DanikaKing kinde001 - June 2020
- */
+import javafx.util.Duration;
+
 public class PatientDetails {
 	// component/node variables
 	private Stage stage;
 	private Scene scene;
+	public BorderPane content = new BorderPane();
 
 	// Colors and styling
 	private String background = CLINIC_WHITE;
@@ -29,7 +38,6 @@ public class PatientDetails {
 	private String btnBackground = CLASSIC_SCRUB_BLUE;
 	private Color btnForeground = Color.rgb(249, 246, 246);
 	private Color txtForeground = Color.rgb(11, 10, 9);
-	public BorderPane content;
 
 	// Colors and Styling CONSTANTS
 	public static final Font MAIN_FONT_HEADING = Font.loadFont("file:src/fonts/segoeui.ttf", 20);
@@ -48,7 +56,6 @@ public class PatientDetails {
 		this.stage = stage;
 
 		// Layout components
-		content = new BorderPane();
 		BorderPane btnArea = new BorderPane();
 		btnArea.setPadding(new Insets(20, 20, 20, 20));
 		BorderPane headerArea = new BorderPane();
@@ -135,8 +142,21 @@ public class PatientDetails {
 		EventHandler<ActionEvent> backBtnClick = new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				scene = new PatientRecordsScene(stage, scene.getWidth(), scene.getHeight()).getScene();
-				stage.setScene(scene);
+
+				var paneToRemove = content.getChildren();
+				var paneToAdd = new PatientRecordsScene(stage, scene.getWidth(), scene.getHeight()).content;
+
+				paneToAdd.translateYProperty().set(-content.getHeight());
+				content.getChildren().add(paneToAdd);
+
+				var keyValue = new KeyValue(paneToAdd.translateYProperty(), 0, Interpolator.EASE_IN);
+				var keyFrame = new KeyFrame(Duration.millis(900), keyValue);
+				var timeline = new Timeline(keyFrame);
+				timeline.setOnFinished(evt -> {
+					content.getChildren().remove(paneToRemove);
+				});
+				timeline.play();
+
 			}
 		};
 		backBtn.setOnAction(backBtnClick);
