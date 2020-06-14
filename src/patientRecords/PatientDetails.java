@@ -29,6 +29,7 @@ public class PatientDetails {
 	private String btnBackground = CLASSIC_SCRUB_BLUE;
 	private Color btnForeground = Color.rgb(249, 246, 246);
 	private Color txtForeground = Color.rgb(11, 10, 9);
+	public BorderPane content;
 
 	// Colors and Styling CONSTANTS
 	public static final Font MAIN_FONT_HEADING = Font.loadFont("file:src/fonts/segoeui.ttf", 20);
@@ -47,7 +48,7 @@ public class PatientDetails {
 		this.stage = stage;
 
 		// Layout components
-		BorderPane content = new BorderPane();
+		content = new BorderPane();
 		BorderPane btnArea = new BorderPane();
 		btnArea.setPadding(new Insets(20, 20, 20, 20));
 		BorderPane headerArea = new BorderPane();

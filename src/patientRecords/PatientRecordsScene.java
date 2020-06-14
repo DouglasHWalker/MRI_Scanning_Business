@@ -253,34 +253,20 @@ public class PatientRecordsScene {
 		selectedPatients.addListener(new ListChangeListener<Patients>() {
 			@Override
 			public void onChanged(Change<? extends Patients> change) {
+				
+			    var paneToRemove = content.getChildren();
+			    var paneToAdd = new PatientDetails(stage, scene.getWidth(), scene.getHeight()).content;
 
-				// Animation commented out due to NullPointerException
-
-				// FXMLLoader loader = new
-				// FXMLLoader(getClass().getResource("/SceneController.java"));
-
-				/*
-				 * try { Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(
-				 * "/patientRecords/PatientDetails")); Scene scene = anchorRoot.getScene();
-				 * 
-				 * root.translateYProperty().set(scene.getHeight());
-				 * parentContainer.getChildren().add(root);
-				 * 
-				 * Timeline timeLine = new Timeline();
-				 * 
-				 * KeyValue kv = new KeyValue(root.translateYProperty(), 0,
-				 * Interpolator.EASE_IN); KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
-				 * timeLine.getKeyFrames().add(kf);
-				 * 
-				 * timeLine.setOnFinished(t -> {
-				 * parentContainer.getChildren().remove(anchorRoot); }); timeLine.play(); }
-				 * catch (IOException e) { // TODO Auto-generated catch block
-				 * e.printStackTrace(); }
-				 */
-
-				// Set new scene
-				scene = new PatientDetails(stage, scene.getWidth(), scene.getHeight()).getScene();
-				stage.setScene(scene);
+			    paneToAdd.translateYProperty().set(content.getHeight());
+			    content.getChildren().add(paneToAdd);
+			  
+			    var keyValue = new KeyValue(paneToAdd.translateYProperty(), 0, Interpolator.EASE_IN);
+			    var keyFrame = new KeyFrame(Duration.millis(900), keyValue);
+			    var timeline =  new Timeline(keyFrame);
+			    timeline.setOnFinished(evt -> {
+			    	content.getChildren().remove(paneToRemove);
+			    });
+			    timeline.play();
 			}
 		});
 
